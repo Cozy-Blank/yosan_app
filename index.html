@@ -396,7 +396,7 @@
   <!-- 自作イラスト・Canvaヘッダー -->
   <div class="header-banner" onclick="changeHeaderImage()">
     <div id="headerContent" class="header-placeholder">
-      🌸https://i.ibb.co/XZtvMGV2/image.png🌸
+      🌸 タップして画像URLを変更 🌸
     </div>
   </div>
 
@@ -513,13 +513,18 @@
     startDay: 1,
     accumulated: 0,
     budget: 10000,
-    headerImg: '',
+    headerImg: 'https://i.ibb.co/XZtvMGV2/image.png',
     isSettled: false,
     lastSettledAmount: 0,
     cat1: [{ name: '食料品', price: 0 }, { name: '日用品', price: 0 }],
     cat2: [{ name: '外食費', price: 0 }, { name: '交際費', price: 0 }],
     cat3: [{ name: '趣味', price: 0 }]
   };
+
+  // 画像初期値が空の場合も強制的に設定
+  if (!state.headerImg) {
+    state.headerImg = 'https://i.ibb.co/XZtvMGV2/image.png';
+  }
 
   let activeTarget = null;
   let calcExpr = '0';
@@ -548,8 +553,8 @@
   }
 
   function changeHeaderImage() {
-    const url = prompt('https://i.ibb.co/XZtvMGV2/image.png:', state.headerImg || '');
-    if (url !== null) {
+    const url = prompt('画像のURLを入力してください:', state.headerImg || '');
+    if (url !== null && url.trim() !== '') {
       state.headerImg = url.trim();
       save();
     }
@@ -561,7 +566,7 @@
     if (state.headerImg) {
       bannerBox.innerHTML = `<img src="${escapeHtml(state.headerImg)}" alt="Header" onerror="this.onerror=null; alert('画像が読み込めませんでした');">`;
     } else {
-      bannerBox.innerHTML = `🌸https://i.ibb.co/XZtvMGV2/image.png  🌸`;
+      bannerBox.innerHTML = `🌸 タップして画像URLを設定 🌸`;
     }
 
     document.getElementById('budgetDisplay').innerText = state.budget.toLocaleString();
