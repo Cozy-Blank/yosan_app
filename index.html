@@ -11,7 +11,6 @@
       --primary: #f472b6;             /* メインピンク */
       --primary-dark: #db2777;
       --accent: #10b981;
-      --accent-warning: #f59e0b;
       --text-main: #4a4049;           /* 優しいダークブラウン */
       --text-muted: #9d8b98;
       --border-color: #fbcfe8;
@@ -22,7 +21,6 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      /* 丸みのあるやわらかいフォントを設定 */
       font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic UI", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
@@ -45,13 +43,19 @@
       gap: 14px;
     }
 
-    /* イラスト用ヘッダーバナー */
+    /* ★ 長方形イラスト枠（画像の横長比率に合わせてキレイに収める） */
+    .header-banner-wrapper {
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
     .header-banner {
       width: 100%;
-      height: 160px;
+      aspect-ratio: 2.3 / 1;                 /* ★ 横長イラストにぴったりフィットする比率 */
       background-color: #fce7f3;
-      border: 2px dashed var(--primary);
-      border-radius: var(--radius);
+      border: 2px solid var(--border-color); /* やわらかいピンク枠 */
+      border-radius: 18px;                   /* やさしい丸み */
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -63,7 +67,7 @@
     .header-banner img {
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: contain;                   /* ★ 端が切れずに全体をすっぽり収める */
     }
 
     .header-placeholder {
@@ -344,10 +348,12 @@
 <body>
 
   <div class="app-container">
-    <!-- ヘッダーイラスト -->
-    <div class="header-banner" onclick="changeHeaderImage()">
-      <div id="headerContent" class="header-placeholder">
-        🌸 タップしてイラストURLを設定 🌸
+    <!-- ヘッダーイラスト（長方形カードフレーム） -->
+    <div class="header-banner-wrapper">
+      <div class="header-banner" onclick="changeHeaderImage()">
+        <div id="headerContent" class="header-placeholder">
+          🌸 タップしてイラストURLを設定 🌸
+        </div>
       </div>
     </div>
 
@@ -611,7 +617,7 @@
 
         if (val > 0) {
           state.todaySpentTotal += val;
-          state.remainingBudget -= val; // 即時残高から引く
+          state.remainingBudget -= val;
           calcExpr = '0';
           updateCalcDisplay();
           document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
@@ -623,10 +629,10 @@
     }
 
     function confirmDailySettle() {
-      addExpense(); // 未加算分があれば加算
+      addExpense();
       if (!state.isSettledToday) {
         state.isSettledToday = true;
-        state.remainingDays -= 1; // 使う日数を減らす
+        state.remainingDays -= 1;
       }
       closeCalcModal();
       saveState();
