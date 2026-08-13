@@ -3,721 +3,489 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>今日だけ予算・精算アプリ</title>
+  <title>日割り生活費・NMD管理アプリ</title>
   <style>
     :root {
-      --bg: #fff5f7;            /* やわらかいピンク系背景 */
-      --card: #ffffff;          /* カード白 */
-      --border: #fbcfe8;        /* パステルピンク枠線 */
-      --text: #4a4049;          /* ダークブラウン文字 */
-      --text-muted: #9d8b98;
-      --primary: #f472b6;       /* メインピンク */
-      --primary-hover: #ec4899;
-      --accent-1: #10b981;      /* 生活費: エメラルド */
-      --accent-2: #f59e0b;      /* 外出費: オレンジ */
-      --accent-3: #ec4899;      /* 自分費: ピンク */
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --accent: #10b981;
+      --accent-warning: #f59e0b;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+      --radius: 16px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 16px;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 12px;
       padding-bottom: 40px;
-      max-width: 500px;
-      margin: 0 auto;
     }
 
-    /* 自作イラスト・Canvaヘッダー表示エリア */
-    .header-banner {
+    .app-container {
       width: 100%;
-      height: 180px;            /* 画像が見やすいように高さを調整 */
-      background-color: #fce7f3;
-      border: 2px dashed #f472b6;
-      border-radius: 16px;
-      margin-bottom: 12px;
+      max-width: 480px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
+      gap: 16px;
     }
 
-    .header-banner img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;     /* ★画像全体を切らずに枠内に収める設定 */
-    }
-
-    .header-placeholder {
-      color: #db2777;
-      font-size: 0.85rem;
-      font-weight: 700;
+    .header {
       text-align: center;
-      padding: 10px;
+      padding: 8px 0;
     }
 
-    /* 締め日設定＆月間残金カード */
-    .period-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px 16px;
+    .header h1 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
       margin-bottom: 12px;
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      box-shadow: 0 4px 6px -1px rgba(244, 114, 182, 0.1);
     }
 
-    .period-setting {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-    }
-
-    select {
-      background: #fff0f6;
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 0.85rem;
-      outline: none;
-      font-weight: bold;
-    }
-
-    .accumulated-box {
-      text-align: right;
-    }
-
-    .accumulated-val {
-      font-size: 1.1rem;
+    .big-number {
+      font-size: 2rem;
       font-weight: 800;
+      color: var(--primary-dark);
     }
 
-    /* 今日の予算カード */
-    .budget-card {
-      background: linear-gradient(135deg, #fbcfe8, #f472b6);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 16px;
-      color: #fff;
-      box-shadow: 0 10px 15px -3px rgba(244, 114, 182, 0.3);
+    .unit {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-left: 2px;
     }
 
-    .budget-title {
-      font-size: 0.8rem;
-      color: #fff;
-      opacity: 0.9;
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-
-    .budget-value-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-    }
-
-    .budget-amount {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #fff;
-      cursor: pointer;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .remaining-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.5);
-      font-size: 0.9rem;
-      font-weight: bold;
     }
 
-    .remaining-val {
-      font-weight: 800;
-      font-size: 1.3rem;
-      background: #fff;
-      padding: 2px 10px;
-      border-radius: 20px;
-    }
-    .plus { color: #059669; }
-    .minus { color: #dc2626; }
-
-    .settle-trigger-btn {
-      width: 100%;
-      margin-top: 12px;
+    .stat-box {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
       padding: 12px;
-      background: #fff;
-      color: #db2777;
+      text-align: center;
+    }
+
+    .stat-box .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-box .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-row label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-row input {
+      width: 130px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      text-align: right;
+      font-size: 0.95rem;
+      font-weight: 600;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
       border: none;
       border-radius: 12px;
-      font-weight: 800;
       font-size: 0.95rem;
+      font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      transition: all 0.2s;
+      transition: background 0.2s;
     }
 
-    .settle-trigger-btn:active {
-      transform: scale(0.98);
-    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-secondary { background: #e2e8f0; color: #334155; }
 
-    .settled-badge {
-      background: #fce7f3;
-      color: #db2777;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      text-align: center;
-      margin-top: 10px;
+    /* メモ・タスク */
+    .task-input-container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
     }
 
-    .unsettle-btn {
-      background: none;
+    .task-input-container input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .task-input-container select {
+      padding: 10px 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      background: white;
+    }
+
+    .btn-small {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
       border: none;
-      color: #9d8b98;
-      text-decoration: underline;
-      font-size: 0.75rem;
+      background: var(--primary);
+      color: white;
       cursor: pointer;
     }
 
-    /* カテゴリ */
-    .category-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 12px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-
-    .cat-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--border);
-    }
-
-    .cat-title {
-      font-weight: 800;
-      font-size: 1rem;
-    }
-
-    .cat-1 { border-color: #a7f3d0; color: #059669; }
-    .cat-2 { border-color: #fde68a; color: #d97706; }
-    .cat-3 { border-color: #fbcfe8; color: #db2777; }
-
-    .cat-sum {
-      font-weight: 800;
-      font-size: 1rem;
-      color: var(--text);
-    }
-
-    .item-list {
+    .task-list {
+      list-style: none;
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .item-row {
+    .task-item {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      background: #fff0f6;
-      padding: 8px 12px;
+      justify-content: space-between;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
     }
 
-    .item-input {
-      background: none;
-      border: none;
-      color: var(--text);
-      font-size: 0.9rem;
-      width: 100%;
-      outline: none;
-      font-weight: 600;
+    .task-item.completed {
+      opacity: 0.5;
+      text-decoration: line-through;
     }
 
-    .item-price-btn {
-      background: #fff;
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      min-width: 85px;
-      text-align: right;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    .task-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-right: 6px;
     }
 
-    .add-btn {
-      margin-top: 8px;
-      width: 100%;
-      padding: 8px;
-      background: none;
-      border: 1px dashed #f472b6;
-      color: #db2777;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+    .badge-outing { background: #dbeafe; color: #1e40af; }
+    .badge-payment { background: #fef3c7; color: #92400e; }
 
     /* モーダル */
-    .modal {
-      display: none;
+    .modal-overlay {
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(3px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal.open { display: flex; }
-
-    .modal-box {
-      background: var(--card);
-      border-radius: 24px;
-      padding: 24px;
-      width: 100%;
-      max-width: 360px;
-      text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-    }
-
-    .modal-box h3 { margin-bottom: 8px; color: #db2777; }
-    .settle-res { font-size: 2.2rem; font-weight: 800; margin: 12px 0; }
-
-    .modal-actions {
       display: flex;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .modal-btn {
-      flex: 1;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn-confirm { background: var(--primary); color: #fff; }
-    .btn-cancel { background: #f1f5f9; color: var(--text-muted); }
-
-    /* 電卓 */
-    .calc-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
       z-index: 100;
-      justify-content: flex-end;
-      flex-direction: column;
     }
 
-    .calc-modal.open { display: flex; }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-    .calc-container {
-      background: #fff;
-      border-top-left-radius: 28px;
-      border-top-right-radius: 28px;
+    .modal-content {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
       padding: 20px;
-      box-shadow: 0 -10px 25px rgba(0,0,0,0.1);
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
     }
 
-    .calc-display {
-      background: #fff0f6;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px 16px;
-      text-align: right;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #db2777;
-      margin-bottom: 16px;
-    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
 
-    .calc-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .badge-frame {
+      background: #f3e8ff;
+      color: #6b21a8;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
-
-    .calc-btn {
-      padding: 16px;
-      background: #f8fafc;
-      color: var(--text);
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .calc-btn.op { background: #fce7f3; color: #db2777; border-color: #fbcfe8; }
-    .calc-btn.ok { background: var(--primary); color: #fff; grid-column: span 2; border: none; }
-    .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
   </style>
 </head>
 <body>
 
-  <!-- 自作イラスト・Canvaヘッダー -->
-  <div class="header-banner" onclick="changeHeaderImage()">
-    <div id="headerContent" class="header-placeholder">
-      🌸 タップして画像URLを設定 🌸
+  <div class="app-container">
+    <div class="header">
+      <h1>日割り生活費・NMD管理</h1>
+    </div>
+
+    <!-- 本日の使える予算 -->
+    <div class="card" style="border-left: 6px solid var(--primary);">
+      <div class="card-title">
+        <span>本日の使える予算 (買い物1回分)</span>
+        <span style="font-size:0.75rem; color:var(--accent-warning); font-weight:bold;">自動計算中</span>
+      </div>
+      <div>
+        <span class="big-number" id="todayBudget">0</span><span class="unit">円</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="label">残り「使う日」</div>
+          <div class="value"><span id="remainingDays">0</span> 日</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">残りの生活費</div>
+          <div class="value"><span id="remainingBudget">0</span> 円</div>
+        </div>
+      </div>
+      <button class="btn btn-accent" style="margin-top:14px;" onclick="openSettleModal()">本日の精算をする</button>
+    </div>
+
+    <!-- カスタマイズ枠（ご褒美枠） -->
+    <div class="card" style="background:#faf5ff; border: 1px solid #e9d5ff;">
+      <div class="card-title">
+        <span class="badge-frame">今月のカスタマイズ枠 (ご褒美など)</span>
+      </div>
+      <div>
+        <span class="big-number" style="color:#7e22ce;" id="rewardAmount">0</span><span class="unit">円</span>
+      </div>
+      <p style="font-size:0.75rem; color:#6b21a8; margin-top:6px;">先月の繰越残高から引き継がれた自由枠です。</p>
+    </div>
+
+    <!-- 月設定 -->
+    <div class="card">
+      <div class="card-title"><span>今月の設定</span></div>
+      <div class="input-group">
+        <div class="input-row">
+          <label for="inputTotal">今月の全生活費</label>
+          <input type="number" id="inputTotal" value="80000" onchange="updateSettings()">
+        </div>
+        <div class="input-row">
+          <label for="inputBigExpense">大型出費 (事前除外)</label>
+          <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()">
+        </div>
+        <div class="input-row">
+          <label for="inputDays">使う設定日数 (月)</label>
+          <input type="number" id="inputDays" value="10" onchange="updateSettings()">
+        </div>
+      </div>
+    </div>
+
+    <!-- タスクメモ -->
+    <div class="card">
+      <div class="card-title"><span>予定＆支払いタスク メモ</span></div>
+      <div class="task-input-container">
+        <select id="taskCategory">
+          <option value="お出かけ">お出かけ</option>
+          <option value="支払い">支払い</option>
+        </select>
+        <input type="text" id="taskText" placeholder="例: 週末ランチ、ネット購入">
+        <button class="btn-small" onclick="addTask()">追加</button>
+      </div>
+      <ul class="task-list" id="taskList"></ul>
+    </div>
+
+    <div class="card" style="text-align: center;">
+      <button class="btn btn-secondary" onclick="openMonthEndModal()">月末の締め処理を行う</button>
     </div>
   </div>
 
-  <!-- 集計設定＆今月の累積残金 -->
-  <div class="period-card">
-    <div class="period-setting">
-      <span>毎月</span>
-      <select id="startDaySelect" onchange="changeStartDay(this.value)"></select>
-      <span>日開始</span>
-    </div>
-    <div class="accumulated-box">
-      <div style="font-size: 0.75rem; color: var(--text-muted);">今期間の累積残金</div>
-      <div class="accumulated-val plus" id="accumulatedDisplay">¥ 0</div>
-    </div>
-  </div>
-
-  <!-- 今日の予算カード -->
-  <div class="budget-card">
-    <div class="budget-title">【今日の予算】（タップで変更）</div>
-    <div class="budget-value-row">
-      <div class="budget-amount" onclick="openCalc('budget')">¥ <span id="budgetDisplay">0</span></div>
-    </div>
-
-    <div class="remaining-row">
-      <span>お財布の残額:</span>
-      <span id="remainingDisplay" class="remaining-val plus">¥ 0</span>
-    </div>
-
-    <button id="settleBtn" class="settle-trigger-btn" onclick="openSettleModal()">本日分の精算をする</button>
-    
-    <div id="settledBadge" class="settled-badge" style="display: none;">
-      <span>✨ 本日精算済み（リアルタイム自動反映中）</span>
-      <button class="unsettle-btn" onclick="unsettle()">精算を取り消す</button>
-    </div>
-  </div>
-
-  <!-- ① 生活費 -->
-  <div class="category-card">
-    <div class="cat-header cat-1">
-      <span class="cat-title">🛒 生活費</span>
-      <span class="cat-sum">¥ <span id="sum-cat1">0</span></span>
-    </div>
-    <div class="item-list" id="list-cat1"></div>
-    <button class="add-btn" onclick="addItem('cat1', '')">+ 項目を追加</button>
-  </div>
-
-  <!-- ② 外出費 -->
-  <div class="category-card">
-    <div class="cat-header cat-2">
-      <span class="cat-title">🚗 外出費</span>
-      <span class="cat-sum">¥ <span id="sum-cat2">0</span></span>
-    </div>
-    <div class="item-list" id="list-cat2"></div>
-    <button class="add-btn" onclick="addItem('cat2', '')">+ 項目を追加</button>
-  </div>
-
-  <!-- ③ 自分費 -->
-  <div class="category-card">
-    <div class="cat-header cat-3">
-      <span class="cat-title">🎁 自分費</span>
-      <span class="cat-sum">¥ <span id="sum-cat3">0</span></span>
-    </div>
-    <div class="item-list" id="list-cat3"></div>
-    <button class="add-btn" onclick="addItem('cat3', '')">+ 項目を追加</button>
-  </div>
-
-  <!-- 精算確認モーダル -->
-  <div class="modal" id="settleModal">
-    <div class="modal-box">
-      <h3>本日の精算結果</h3>
-      <p style="font-size: 0.85rem; color: var(--text-muted);">予算から使った残金</p>
-      <div class="settle-res" id="settleResultVal">¥ 0</div>
-      <p style="font-size: 0.8rem; color: var(--text-muted);">この残金（プラス/マイナス）を累積残金に加算します。<br>※精算後も自由に金額の変更・追加が可能です！</p>
-      <div class="modal-actions">
-        <button class="modal-btn btn-cancel" onclick="closeSettleModal()">キャンセル</button>
-        <button class="modal-btn btn-confirm" onclick="confirmSettle()">確定して保存</button>
+  <!-- 精算モーダル -->
+  <div class="modal-overlay" id="settleModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom:12px; text-align:center;">本日の精算</h3>
+      <div class="input-row" style="margin-bottom:16px;">
+        <label>本日使った金額</label>
+        <input type="number" id="todaySpent" value="0">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" onclick="closeSettleModal()">キャンセル</button>
+        <button class="btn btn-primary" onclick="submitSettle()">確定して残高を再分配</button>
       </div>
     </div>
   </div>
 
-  <!-- 電卓モーダル -->
-  <div class="calc-modal" id="calcModal">
-    <div class="calc-container">
-      <div class="calc-display" id="calcDisplay">0</div>
-      <div class="calc-grid">
-        <button class="calc-btn clear" onclick="calcInput('C')">C</button>
-        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-        <button class="calc-btn op" onclick="calcInput('*')">×</button>
-        <button class="calc-btn op" onclick="calcInput('-')">-</button>
-
-        <button class="calc-btn" onclick="calcInput('7')">7</button>
-        <button class="calc-btn" onclick="calcInput('8')">8</button>
-        <button class="calc-btn" onclick="calcInput('9')">9</button>
-        <button class="calc-btn op" onclick="calcInput('+')">+</button>
-
-        <button class="calc-btn" onclick="calcInput('4')">4</button>
-        <button class="calc-btn" onclick="calcInput('5')">5</button>
-        <button class="calc-btn" onclick="calcInput('6')">6</button>
-
-        <button class="calc-btn ok" onclick="calcDone()">決定</button>
-
-        <button class="calc-btn" onclick="calcInput('1')">1</button>
-        <button class="calc-btn" onclick="calcInput('2')">2</button>
-        <button class="calc-btn" onclick="calcInput('3')">3</button>
-
-        <button class="calc-btn" onclick="calcInput('0')">0</button>
-        <button class="calc-btn" onclick="calcInput('00')">00</button>
+  <!-- 月末締めモーダル -->
+  <div class="modal-overlay" id="monthEndModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom:12px; text-align:center;">月末の締め処理</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;">今月の残り残高: <strong id="modalEndRemaining">0</strong> 円</p>
+      <div class="input-row" style="margin-bottom:16px;">
+        <label>翌月のカスタマイズ枠にする額</label>
+        <input type="number" id="customizeAmount" value="0">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-secondary" onclick="closeMonthEndModal()">キャンセル</button>
+        <button class="btn btn-accent" onclick="submitMonthEnd()">確定して翌月へ</button>
       </div>
     </div>
   </div>
 
-<script>
-  // ★ 新しい画像URLを設定
-  const NEW_HEADER_IMAGE = 'https://i.ibb.co/HTr381Vd/image.png';
+  <script>
+    let state = JSON.parse(localStorage.getItem('nmd_app_state_v2') || 'null') || {
+      totalBudget: 80000,
+      bigExpense: 10000,
+      settingDays: 10,
+      remainingDays: 10,
+      remainingBudget: 70000,
+      rewardFrame: 0,
+      tasks: []
+    };
 
-  let state = JSON.parse(localStorage.getItem('budget_app_v3_state') || 'null') || {
-    startDay: 1,
-    accumulated: 0,
-    budget: 10000,
-    headerImg: NEW_HEADER_IMAGE,
-    isSettled: false,
-    lastSettledAmount: 0,
-    cat1: [{ name: '食料品', price: 0 }, { name: '日用品', price: 0 }],
-    cat2: [{ name: '外食費', price: 0 }, { name: '交際費', price: 0 }],
-    cat3: [{ name: '趣味', price: 0 }]
-  };
-
-  // 過去の古いURLが残っている場合も自動で最新画像に上書き
-  state.headerImg = NEW_HEADER_IMAGE;
-
-  let activeTarget = null;
-  let calcExpr = '0';
-  let currentRemaining = 0;
-
-  function initSelect() {
-    const sel = document.getElementById('startDaySelect');
-    sel.innerHTML = '';
-    for (let i = 1; i <= 28; i++) {
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.innerText = i;
-      if (i === state.startDay) opt.selected = true;
-      sel.appendChild(opt);
-    }
-  }
-
-  function changeStartDay(val) {
-    state.startDay = Number(val);
-    save();
-  }
-
-  function save() {
-    localStorage.setItem('budget_app_v3_state', JSON.stringify(state));
-    render();
-  }
-
-  function changeHeaderImage() {
-    const url = prompt('画像のURLを入力してください:', state.headerImg || '');
-    if (url !== null && url.trim() !== '') {
-      state.headerImg = url.trim();
-      save();
-    }
-  }
-
-  function render() {
-    // ヘッダー画像設定
-    const bannerBox = document.getElementById('headerContent');
-    if (state.headerImg) {
-      bannerBox.innerHTML = `<img src="${escapeHtml(state.headerImg)}" alt="Header" onerror="this.onerror=null; alert('画像が読み込めませんでした');">`;
-    } else {
-      bannerBox.innerHTML = `🌸 タップして画像URLを設定 🌸`;
+    function saveState() {
+      localStorage.setItem('nmd_app_state_v2', JSON.stringify(state));
+      render();
     }
 
-    document.getElementById('budgetDisplay').innerText = state.budget.toLocaleString();
-    
-    // カテゴリ再描画
-    ['cat1', 'cat2', 'cat3'].forEach(cat => {
-      const container = document.getElementById(`list-${cat}`);
-      container.innerHTML = '';
-      let sum = 0;
+    function render() {
+      document.getElementById('inputTotal').value = state.totalBudget;
+      document.getElementById('inputBigExpense').value = state.bigExpense;
+      document.getElementById('inputDays').value = state.settingDays;
 
-      state[cat].forEach((item, index) => {
-        sum += Number(item.price) || 0;
-        const row = document.createElement('div');
-        row.className = 'item-row';
-        row.innerHTML = `
-          <input type="text" class="item-input" value="${escapeHtml(item.name)}" placeholder="項目名" onchange="updateName('${cat}', ${index}, this.value)">
-          <button class="item-price-btn" onclick="openCalc('${cat}', ${index})">¥ ${(item.price || 0).toLocaleString()}</button>
+      document.getElementById('remainingDays').innerText = state.remainingDays;
+      document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
+
+      const todayBudget = state.remainingDays > 0 ? Math.floor(state.remainingBudget / state.remainingDays) : 0;
+      document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
+      document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
+
+      const taskListEl = document.getElementById('taskList');
+      taskListEl.innerHTML = '';
+      state.tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
+        li.innerHTML = `
+          <div>
+            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+            <span class="task-badge ${badgeClass}">${task.category}</span>
+            <span style="font-size:0.85rem; font-weight:600;">${escapeHtml(task.text)}</span>
+          </div>
+          <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
         `;
-        container.appendChild(row);
+        taskListEl.appendChild(li);
       });
-
-      document.getElementById(`sum-${cat}`).innerText = sum.toLocaleString();
-    });
-
-    // 残額のリアルタイム計算
-    const used1 = state.cat1.reduce((a, b) => a + (Number(b.price)||0), 0);
-    const used2 = state.cat2.reduce((a, b) => a + (Number(b.price)||0), 0);
-    const used3 = state.cat3.reduce((a, b) => a + (Number(b.price)||0), 0);
-    const totalUsed = used1 + used2 + used3;
-    
-    currentRemaining = state.budget - totalUsed;
-
-    // 精算済みの場合は差分を自動調整して累積残金をリアルタイム更新
-    if (state.isSettled) {
-      const diff = currentRemaining - state.lastSettledAmount;
-      state.accumulated += diff;
-      state.lastSettledAmount = currentRemaining;
-      localStorage.setItem('budget_app_v3_state', JSON.stringify(state));
-
-      document.getElementById('settleBtn').style.display = 'none';
-      document.getElementById('settledBadge').style.display = 'flex';
-    } else {
-      document.getElementById('settleBtn').style.display = 'block';
-      document.getElementById('settledBadge').style.display = 'none';
     }
 
-    const accEl = document.getElementById('accumulatedDisplay');
-    accEl.innerText = `¥ ${state.accumulated.toLocaleString()}`;
-    accEl.className = `accumulated-val ${state.accumulated >= 0 ? 'plus' : 'minus'}`;
+    function updateSettings() {
+      state.totalBudget = Number(document.getElementById('inputTotal').value) || 0;
+      state.bigExpense = Number(document.getElementById('inputBigExpense').value) || 0;
+      const newDays = Number(document.getElementById('inputDays').value) || 1;
+      
+      if (state.remainingDays > newDays) state.remainingDays = newDays;
+      state.settingDays = newDays;
 
-    const remEl = document.getElementById('remainingDisplay');
-    remEl.innerText = `¥ ${currentRemaining.toLocaleString()}`;
-    remEl.className = `remaining-val ${currentRemaining >= 0 ? 'plus' : 'minus'}`;
-  }
-
-  function updateName(cat, index, val) {
-    state[cat][index].name = val;
-    save();
-  }
-
-  function addItem(cat, defaultName = '') {
-    state[cat].push({ name: defaultName, price: 0 });
-    save();
-  }
-
-  // 精算モーダル処理
-  function openSettleModal() {
-    const resEl = document.getElementById('settleResultVal');
-    resEl.innerText = `¥ ${currentRemaining.toLocaleString()}`;
-    resEl.className = `settle-res ${currentRemaining >= 0 ? 'plus' : 'minus'}`;
-    document.getElementById('settleModal').classList.add('open');
-  }
-
-  function closeSettleModal() {
-    document.getElementById('settleModal').classList.remove('open');
-  }
-
-  function confirmSettle() {
-    state.isSettled = true;
-    state.lastSettledAmount = currentRemaining;
-    state.accumulated += currentRemaining;
-    save();
-    closeSettleModal();
-  }
-
-  function unsettle() {
-    if (confirm('精算を取り消しますか？（累積残金から本日の残金が差し引かれます）')) {
-      state.accumulated -= state.lastSettledAmount;
-      state.isSettled = false;
-      state.lastSettledAmount = 0;
-      save();
-    }
-  }
-
-  // 電卓処理
-  function openCalc(target, index = null) {
-    if (target === 'budget') {
-      activeTarget = 'budget';
-      calcExpr = String(state.budget);
-    } else {
-      activeTarget = { cat: target, index: index };
-      calcExpr = String(state[target][index].price || '0');
-    }
-    updateCalcDisplay();
-    document.getElementById('calcModal').classList.add('open');
-  }
-
-  function calcInput(val) {
-    if (val === 'C') {
-      calcExpr = '0';
-    } else {
-      if (calcExpr === '0' && !isNaN(val)) {
-        calcExpr = val;
-      } else {
-        calcExpr += val;
+      if (state.remainingDays === state.settingDays) {
+        state.remainingBudget = state.totalBudget - state.bigExpense;
       }
+      saveState();
     }
-    updateCalcDisplay();
-  }
 
-  function updateCalcDisplay() {
-    document.getElementById('calcDisplay').innerText = calcExpr;
-  }
+    function openSettleModal() { document.getElementById('settleModal').classList.add('active'); }
+    function closeSettleModal() { document.getElementById('settleModal').classList.remove('active'); }
 
-  function calcDone() {
-    try {
-      let result = eval(calcExpr.replace(/×/g, '*').replace(/÷/g, '/'));
-      if (isNaN(result) || result < 0) result = 0;
-      result = Math.floor(result);
-
-      if (activeTarget === 'budget') {
-        state.budget = result;
-      } else {
-        state[activeTarget.cat][activeTarget.index].price = result;
-      }
-      save();
-      document.getElementById('calcModal').classList.remove('open');
-    } catch (e) {
-      alert('計算式が正しくありません');
+    function submitSettle() {
+      const spent = Number(document.getElementById('todaySpent').value) || 0;
+      state.remainingBudget -= spent;
+      state.remainingDays -= 1;
+      closeSettleModal();
+      document.getElementById('todaySpent').value = 0;
+      saveState();
     }
-  }
 
-  function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, match => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[match]));
-  }
+    function openMonthEndModal() {
+      document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
+      document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
+      document.getElementById('monthEndModal').classList.add('active');
+    }
 
-  initSelect();
-  render();
-</script>
+    function closeMonthEndModal() { document.getElementById('monthEndModal').classList.remove('active'); }
+
+    function submitMonthEnd() {
+      const customVal = Number(document.getElementById('customizeAmount').value) || 0;
+      state.rewardFrame = customVal;
+      state.remainingDays = state.settingDays;
+      state.remainingBudget = state.totalBudget - state.bigExpense;
+      closeMonthEndModal();
+      saveState();
+      alert('月末処理が完了しました！翌月のカスタマイズ枠がセットされました。');
+    }
+
+    function addTask() {
+      const text = document.getElementById('taskText').value.trim();
+      const category = document.getElementById('taskCategory').value;
+      if (!text) return;
+      state.tasks.push({ id: Date.now(), category, text, completed: false });
+      document.getElementById('taskText').value = '';
+      saveState();
+    }
+
+    function toggleTask(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (task) { task.completed = !task.completed; saveState(); }
+    }
+
+    function deleteTask(id) {
+      state.tasks = state.tasks.filter(t => t.id !== id);
+      saveState();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
+
+    render();
+  </script>
 </body>
 </html>
