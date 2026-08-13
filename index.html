@@ -1,699 +1,327 @@
-<!DOCTYPE html>
+import os
+
+html_code = """<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>日割り生活費・NMD管理アプリ</title>
-  <style>
-    :root {
-      --bg-color: #fff5f7;            /* やわらかいピンク系背景 */
-      --card-bg: #ffffff;
-      --primary: #f472b6;             /* メインピンク */
-      --primary-dark: #db2777;
-      --accent: #10b981;
-      --text-main: #4a4049;           /* 優しいダークブラウン */
-      --text-muted: #9d8b98;
-      --border-color: #fbcfe8;
-      --radius: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>偏愛具 - 予算＆日数管理アプリ</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --accent-color: #bb86fc;
+            --accent-variant: #3700b3;
+            --secondary-color: #03dac6;
+            --text-color: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+            --danger-color: #cf6679;
+        }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic UI", sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
 
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 12px;
-      padding-bottom: 40px;
-    }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
-    .app-container {
-      width: 100%;
-      max-width: 480px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
 
-    /* ★ 長方形イラスト枠（背景色を「白」に変更してイラストとなじませる） */
-    .header-banner-wrapper {
-      width: 100%;
-      margin-bottom: 2px;
-    }
+        h1 {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+        }
 
-    .header-banner {
-      width: 100%;
-      aspect-ratio: 2.3 / 1;
-      background-color: #ffffff;             /* ★ 背景色を「白」に変更 */
-      border: 2px solid var(--border-color); /* やわらかいピンク枠 */
-      border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-    }
+        .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
 
-    .header-banner img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;                   /* 端が切れずに全体をすっぽり収める */
-    }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
 
-    .header-placeholder {
-      color: var(--primary-dark);
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-align: center;
-      padding: 10px;
-    }
+        .card-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(244, 114, 182, 0.08);
-      border: 1px solid var(--border-color);
-    }
+        .setting-group {
+            margin-bottom: 15px;
+        }
 
-    .card-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
 
-    .big-number {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-    }
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: #2a2a2a;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
 
-    .unit {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-left: 2px;
-    }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
+        .stat-box {
+            background-color: #252525;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
 
-    .stat-box {
-      background: #fff0f6;
-      border-radius: 14px;
-      padding: 10px;
-      text-align: center;
-    }
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-top: 4px;
+        }
 
-    .stat-box .label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
 
-    .stat-box .value {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #2a2a2a;
+            height: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
 
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.1s, background 0.2s;
-    }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
 
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-accent { background: #10b981; color: white; }
-    .btn-secondary { background: #f1f5f9; color: #475569; }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent-color);
+            color: #000;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
 
-    .settled-badge {
-      background: #fce7f3;
-      color: var(--primary-dark);
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        button:hover {
+            opacity: 0.9;
+        }
 
-    .unsettle-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      text-decoration: underline;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
+        .period-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background-color: #252525;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .input-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .input-row label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .input-row input {
-      width: 130px;
-      padding: 8px 12px;
-      border: 1px solid var(--border-color);
-      background: #fff0f6;
-      border-radius: 10px;
-      text-align: right;
-      font-size: 0.95rem;
-      font-weight: 800;
-      outline: none;
-      color: var(--text-main);
-    }
-
-    /* タスクメモ */
-    .task-input-container {
-      display: flex;
-      gap: 6px;
-      margin-bottom: 10px;
-    }
-
-    .task-input-container input {
-      flex: 1;
-      padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 0.85rem;
-      outline: none;
-      background: #fff0f6;
-    }
-
-    .task-input-container select {
-      padding: 8px;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 0.8rem;
-      background: white;
-      font-weight: 700;
-    }
-
-    .btn-small {
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      border: none;
-      background: var(--primary);
-      color: white;
-      cursor: pointer;
-    }
-
-    .task-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .task-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      background: #fff0f6;
-      border-radius: 10px;
-    }
-
-    .task-item.completed {
-      opacity: 0.4;
-      text-decoration: line-through;
-    }
-
-    .task-badge {
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-weight: 800;
-      margin-right: 6px;
-    }
-
-    .badge-outing { background: #dbeafe; color: #1e40af; }
-    .badge-payment { background: #fef3c7; color: #92400e; }
-
-    /* 電卓風モーダル */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 100;
-    }
-
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-    .modal-content {
-      width: 100%;
-      max-width: 480px;
-      background: white;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      padding: 20px;
-      transform: translateY(100%);
-      transition: transform 0.25s ease;
-    }
-
-    .modal-overlay.active .modal-content { transform: translateY(0); }
-
-    .calc-display {
-      background: #fff0f6;
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      text-align: right;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin-bottom: 12px;
-    }
-
-    .calc-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .calc-btn {
-      padding: 14px;
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .calc-btn.op { background: #fce7f3; color: var(--primary-dark); }
-    .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
-    .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
-
-    .badge-frame {
-      background: #f3e8ff;
-      color: #6b21a8;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-  </style>
+        .highlight {
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <!-- ヘッダーイラスト（長方形カードフレーム：背景白） -->
-    <div class="header-banner-wrapper">
-      <div class="header-banner" onclick="changeHeaderImage()">
-        <div id="headerContent" class="header-placeholder">
-          🌸 タップしてイラストURLを設定 🌸
+    <header>
+        <h1>偏愛具：期間＆目標アクセラレーター</h1>
+        <div class="subtitle">ブレない主軸で、ブーストを仕込む</div>
+    </header>
+
+    <!-- 集計期間・目標設定 -->
+    <section class="card">
+        <div class="card-title">
+            <span>期間＆予算設定</span>
         </div>
-      </div>
-    </div>
 
-    <!-- 本日の使える予算 -->
-    <div class="card" style="border-left: 6px solid var(--primary);">
-      <div class="card-title">
-        <span>本日の使える予算 (買い物1回分)</span>
-        <span style="font-size:0.75rem; color:var(--primary-dark); font-weight:bold;">自動再計算中</span>
-      </div>
-      <div>
-        <span class="big-number" id="todayBudget">0</span><span class="unit">円</span>
-      </div>
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="label">残り「使う日」</div>
-          <div class="value"><span id="remainingDays">0</span> 日</div>
+        <div class="setting-group">
+            <label for="period-type">締め日タイプ</label>
+            <select id="period-type" onchange="updateSettings()">
+                <option value="end-of-month">月末締め（1日〜末日）</option>
+                <option value="custom-next">指定日締め（〇日〜翌月〇-1日）</option>
+                <option value="custom-current">指定日締め（前月〇日〜当月〇-1日）</option>
+            </select>
         </div>
-        <div class="stat-box">
-          <div class="label">残りの生活費</div>
-          <div class="value"><span id="remainingBudget">0</span> 円</div>
+
+        <div class="setting-group" id="day-select-group" style="display: none;">
+            <label for="start-day">開始日（〇日）</label>
+            <input type="number" id="start-day" min="1" max="28" value="25" onchange="updateSettings()">
         </div>
-      </div>
 
-      <button id="settleTriggerBtn" class="btn btn-primary" style="margin-top:12px;" onclick="openCalcModal()">本日の買い物を上乗せ・精算</button>
-
-      <div id="settledBadge" class="settled-badge" style="display: none;">
-        <span>✨ 本日精算済み（本日利用: ¥<span id="settledTodaySum">0</span>）</span>
-        <button class="unsettle-btn" onclick="unsettle()">やり直す</button>
-      </div>
-    </div>
-
-    <!-- カスタマイズ枠（ご褒美枠） -->
-    <div class="card" style="background:#faf5ff; border: 1px solid #e9d5ff;">
-      <div class="card-title">
-        <span class="badge-frame">今月のカスタマイズ枠 (ご褒美など)</span>
-      </div>
-      <div>
-        <span class="big-number" style="color:#7e22ce;" id="rewardAmount">0</span><span class="unit">円</span>
-      </div>
-    </div>
-
-    <!-- 条件設定 -->
-    <div class="card">
-      <div class="card-title"><span>今月の設定</span></div>
-      <div class="input-group">
-        <div class="input-row">
-          <label for="inputTotal">今月の全生活費</label>
-          <input type="number" id="inputTotal" value="80000" onchange="updateSettings()">
+        <div class="grid-2">
+            <div class="setting-group">
+                <label for="total-budget">今期の予算上限 (円)</label>
+                <input type="number" id="total-budget" value="100000" onchange="updateSettings()">
+            </div>
+            <div class="setting-group">
+                <label for="reward-rate">ご褒美枠設定 (%)</label>
+                <input type="number" id="reward-rate" value="15" min="0" max="50" onchange="updateSettings()">
+            </div>
         </div>
-        <div class="input-row">
-          <label for="inputBigExpense">大型出費 (事前除外)</label>
-          <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()">
+    </section>
+
+    <!-- ダッシュボード -->
+    <section class="card">
+        <div class="card-title">
+            <span>進行状況・日割り指標</span>
         </div>
-        <div class="input-row">
-          <label for="inputDays">使う設定日数 (月)</label>
-          <input type="number" id="inputDays" value="10" onchange="updateSettings()">
+
+        <div class="period-info">
+            対象期間: <span id="period-range-display" class="highlight">-</span>
         </div>
-      </div>
-    </div>
 
-    <!-- タスクメモ -->
-    <div class="card">
-      <div class="card-title"><span>予定＆支払いタスク メモ</span></div>
-      <div class="task-input-container">
-        <select id="taskCategory">
-          <option value="お出かけ">お出かけ</option>
-          <option value="支払い">支払い</option>
-        </select>
-        <input type="text" id="taskText" placeholder="例: 週末ランチ、ネット購入">
-        <button class="btn-small" onclick="addTask()">追加</button>
-      </div>
-      <ul class="task-list" id="taskList"></ul>
-    </div>
+        <div class="grid-2" style="margin-bottom: 10px;">
+            <div class="stat-box">
+                <div class="stat-label">経過日数 / 全日数</div>
+                <div class="stat-value" id="days-progress">- / -</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">残り日数</div>
+                <div class="stat-value" id="days-remaining">- 日</div>
+            </div>
+        </div>
 
-    <div class="card" style="text-align: center;">
-      <button class="btn btn-secondary" onclick="openMonthEndModal()">月末の締め処理を行う</button>
-    </div>
-  </div>
+        <div class="grid-2" style="margin-bottom: 10px;">
+            <div class="stat-box">
+                <div class="stat-label">基本枠（生活用）</div>
+                <div class="stat-value" id="base-budget-display">-</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">ご褒美枠（ブースト用）</div>
+                <div class="stat-value" id="reward-budget-display" style="color: var(--accent-color);">-</div>
+            </div>
+        </div>
 
-  <!-- 電卓上乗せモーダル -->
-  <div class="modal-overlay" id="calcModal">
-    <div class="modal-content">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-weight:800; font-size:0.9rem;">本日の利用額を上乗せ追加</span>
-        <span style="font-size:0.8rem; color:var(--text-muted);">本日累計: ¥<span id="calcTodayTotal">0</span></span>
-      </div>
-      
-      <div class="calc-display" id="calcDisplay">0</div>
+        <div class="stat-box" style="margin-top: 10px;">
+            <div class="stat-label">今日使える基本目安額（1日あたり）</div>
+            <div class="stat-value" id="daily-allowance" style="font-size: 1.8rem;">-</div>
+        </div>
 
-      <div class="calc-grid">
-        <button class="calc-btn clear" onclick="calcInput('C')">C</button>
-        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-        <button class="calc-btn op" onclick="calcInput('*')">×</button>
-        <button class="calc-btn op" onclick="calcInput('-')">-</button>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="time-progress-bar"></div>
+        </div>
+    </section>
 
-        <button class="calc-btn" onclick="calcInput('7')">7</button>
-        <button class="calc-btn" onclick="calcInput('8')">8</button>
-        <button class="calc-btn" onclick="calcInput('9')">9</button>
-        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+    <script>
+        function updateSettings() {
+            const periodType = document.getElementById('period-type').value;
+            const dayGroup = document.getElementById('day-select-group');
+            const startDayInput = parseInt(document.getElementById('start-day').value) || 25;
+            const totalBudget = parseInt(document.getElementById('total-budget').value) || 0;
+            const rewardRate = parseInt(document.getElementById('reward-rate').value) || 0;
 
-        <button class="calc-btn" onclick="calcInput('4')">4</button>
-        <button class="calc-btn" onclick="calcInput('5')">5</button>
-        <button class="calc-btn" onclick="calcInput('6')">6</button>
+            if (periodType === 'end-of-month') {
+                dayGroup.style.display = 'none';
+            } else {
+                dayGroup.style.display = 'block';
+            }
 
-        <button class="calc-btn add" onclick="addExpense()">＋ 上乗せ記録</button>
+            const today = new Date();
+            let startDate, endDate;
 
-        <button class="calc-btn" onclick="calcInput('1')">1</button>
-        <button class="calc-btn" onclick="calcInput('2')">2</button>
-        <button class="calc-btn" onclick="calcInput('3')">3</button>
+            if (periodType === 'end-of-month') {
+                startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+                endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+            } else if (periodType === 'custom-next') {
+                if (today.getDate() >= startDayInput) {
+                    startDate = new Date(today.getFullYear(), today.getMonth(), startDayInput);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, startDayInput - 1);
+                } else {
+                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, startDayInput);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), startDayInput - 1);
+                }
+            } else if (periodType === 'custom-current') {
+                if (today.getDate() >= startDayInput) {
+                    startDate = new Date(today.getFullYear(), today.getMonth(), startDayInput);
+                    endDate = new Date(today.getFullYear(), today.getMonth() + 1, startDayInput - 1);
+                } else {
+                    startDate = new Date(today.getFullYear(), today.getMonth() - 1, startDayInput);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), startDayInput - 1);
+                }
+            }
 
-        <button class="calc-btn" onclick="calcInput('0')">0</button>
-        <button class="calc-btn" onclick="calcInput('00')">00</button>
-      </div>
+            // 日数計算
+            const totalTime = endDate.getTime() - startDate.getTime();
+            const totalDays = Math.ceil(totalTime / (1000 * 3600 * 24)) + 1;
 
-      <div style="display:flex; gap:10px; margin-top:14px;">
-        <button class="btn btn-secondary" onclick="closeCalcModal()">閉じる</button>
-        <button class="btn btn-primary" onclick="confirmDailySettle()">本日分を確定して精算</button>
-      </div>
-    </div>
-  </div>
+            const elapsedTime = today.getTime() - startDate.getTime();
+            let elapsedDays = Math.floor(elapsedTime / (1000 * 3600 * 24)) + 1;
+            if (elapsedDays < 1) elapsedDays = 1;
+            if (elapsedDays > totalDays) elapsedDays = totalDays;
 
-  <!-- 月末締めモーダル -->
-  <div class="modal-overlay" id="monthEndModal">
-    <div class="modal-content">
-      <h3 style="margin-bottom:12px; text-align:center;">月末の締め処理</h3>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;">今月の残り残高: <strong id="modalEndRemaining">0</strong> 円</p>
-      <div class="input-row" style="margin-bottom:16px;">
-        <label>翌月のカスタマイズ枠にする額</label>
-        <input type="number" id="customizeAmount" value="0">
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" onclick="closeMonthEndModal()">キャンセル</button>
-        <button class="btn btn-accent" onclick="submitMonthEnd()">確定して翌月へ</button>
-      </div>
-    </div>
-  </div>
+            const remainingDays = totalDays - elapsedDays + 1;
 
-  <script>
-    const DEFAULT_HEADER = 'https://i.ibb.co/HTr381Vd/image.png';
+            // 表示更新
+            const formatDate = (d) => `${d.getMonth() + 1}/${d.getDate()}`;
+            document.getElementById('period-range-display').textContent = `${formatDate(startDate)} 〜 ${formatDate(endDate)}`;
+            document.getElementById('days-progress').textContent = `${elapsedDays} / ${totalDays}日`;
+            document.getElementById('days-remaining').textContent = `${remainingDays} 日`;
 
-    let state = JSON.parse(localStorage.getItem('nmd_app_state_v3') || 'null') || {
-      headerImg: DEFAULT_HEADER,
-      totalBudget: 80000,
-      bigExpense: 10000,
-      settingDays: 10,
-      remainingDays: 10,
-      remainingBudget: 70000,
-      todaySpentTotal: 0,
-      isSettledToday: false,
-      rewardFrame: 0,
-      tasks: []
-    };
+            // 予算計算
+            const rewardBudget = Math.floor(totalBudget * (rewardRate / 100));
+            const baseBudget = totalBudget - rewardBudget;
+            const dailyAllowance = Math.floor(baseBudget / totalDays);
 
-    let calcExpr = '0';
+            document.getElementById('base-budget-display').textContent = `¥${baseBudget.toLocaleString()}`;
+            document.getElementById('reward-budget-display').textContent = `¥${rewardBudget.toLocaleString()}`;
+            document.getElementById('daily-allowance').textContent = `¥${dailyAllowance.toLocaleString()}`;
 
-    function saveState() {
-      localStorage.setItem('nmd_app_state_v3', JSON.stringify(state));
-      render();
-    }
-
-    function changeHeaderImage() {
-      const url = prompt('画像のURLを入力してください:', state.headerImg || '');
-      if (url !== null && url.trim() !== '') {
-        state.headerImg = url.trim();
-        saveState();
-      }
-    }
-
-    function render() {
-      // ヘッダー画像
-      const bannerBox = document.getElementById('headerContent');
-      if (state.headerImg) {
-        bannerBox.innerHTML = `<img src="${state.headerImg}" alt="Header" onerror="this.onerror=null; alert('画像が読み込めませんでした');">`;
-      } else {
-        bannerBox.innerHTML = `🌸 タップしてイラストURLを設定 🌸`;
-      }
-
-      document.getElementById('inputTotal').value = state.totalBudget;
-      document.getElementById('inputBigExpense').value = state.bigExpense;
-      document.getElementById('inputDays').value = state.settingDays;
-
-      document.getElementById('remainingDays').innerText = state.remainingDays;
-      document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
-
-      const todayBudget = state.remainingDays > 0 ? Math.floor(state.remainingBudget / state.remainingDays) : 0;
-      document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
-      document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
-
-      // 精算状態の制御
-      if (state.isSettledToday) {
-        document.getElementById('settleTriggerBtn').style.display = 'none';
-        document.getElementById('settledBadge').style.display = 'flex';
-        document.getElementById('settledTodaySum').innerText = state.todaySpentTotal.toLocaleString();
-      } else {
-        document.getElementById('settleTriggerBtn').style.display = 'block';
-        document.getElementById('settledBadge').style.display = 'none';
-      }
-
-      // タスク表示
-      const taskListEl = document.getElementById('taskList');
-      taskListEl.innerHTML = '';
-      state.tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.className = `task-item ${task.completed ? 'completed' : ''}`;
-        const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
-        li.innerHTML = `
-          <div>
-            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-            <span class="task-badge ${badgeClass}">${task.category}</span>
-            <span style="font-size:0.85rem; font-weight:700;">${escapeHtml(task.text)}</span>
-          </div>
-          <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
-        `;
-        taskListEl.appendChild(li);
-      });
-    }
-
-    function updateSettings() {
-      state.totalBudget = Number(document.getElementById('inputTotal').value) || 0;
-      state.bigExpense = Number(document.getElementById('inputBigExpense').value) || 0;
-      const newDays = Number(document.getElementById('inputDays').value) || 1;
-      
-      if (state.remainingDays > newDays) state.remainingDays = newDays;
-      state.settingDays = newDays;
-
-      if (state.remainingDays === state.settingDays && !state.isSettledToday) {
-        state.remainingBudget = state.totalBudget - state.bigExpense - state.todaySpentTotal;
-      }
-      saveState();
-    }
-
-    /* 電卓・上乗せロジック */
-    function openCalcModal() {
-      calcExpr = '0';
-      updateCalcDisplay();
-      document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
-      document.getElementById('calcModal').classList.add('active');
-    }
-
-    function closeCalcModal() { document.getElementById('calcModal').classList.remove('active'); }
-
-    function calcInput(val) {
-      if (val === 'C') {
-        calcExpr = '0';
-      } else {
-        if (calcExpr === '0' && !isNaN(val)) calcExpr = val;
-        else calcExpr += val;
-      }
-      updateCalcDisplay();
-    }
-
-    function updateCalcDisplay() {
-      document.getElementById('calcDisplay').innerText = calcExpr;
-    }
-
-    function addExpense() {
-      try {
-        let val = eval(calcExpr.replace(/×/g, '*').replace(/÷/g, '/'));
-        if (isNaN(val) || val < 0) val = 0;
-        val = Math.floor(val);
-
-        if (val > 0) {
-          state.todaySpentTotal += val;
-          state.remainingBudget -= val;
-          calcExpr = '0';
-          updateCalcDisplay();
-          document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
-          saveState();
+            // プログレスバー
+            const progressPercent = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+            document.getElementById('time-progress-bar').style.width = `${progressPercent}%`;
         }
-      } catch (e) {
-        alert('計算式が正しくありません');
-      }
-    }
 
-    function confirmDailySettle() {
-      addExpense();
-      if (!state.isSettledToday) {
-        state.isSettledToday = true;
-        state.remainingDays -= 1;
-      }
-      closeCalcModal();
-      saveState();
-    }
-
-    function unsettle() {
-      if (confirm('本日の精算を取り消しますか？（利用額は戻り、使う日数も1日戻ります）')) {
-        state.remainingBudget += state.todaySpentTotal;
-        state.todaySpentTotal = 0;
-        state.remainingDays += 1;
-        state.isSettledToday = false;
-        saveState();
-      }
-    }
-
-    /* 月末締め処理 */
-    function openMonthEndModal() {
-      document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
-      document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
-      document.getElementById('monthEndModal').classList.add('active');
-    }
-
-    function closeMonthEndModal() { document.getElementById('monthEndModal').classList.remove('active'); }
-
-    function submitMonthEnd() {
-      const customVal = Number(document.getElementById('customizeAmount').value) || 0;
-      state.rewardFrame = customVal;
-      state.remainingDays = state.settingDays;
-      state.remainingBudget = state.totalBudget - state.bigExpense;
-      state.todaySpentTotal = 0;
-      state.isSettledToday = false;
-      closeMonthEndModal();
-      saveState();
-      alert('月末処理が完了しました！');
-    }
-
-    /* タスク操作 */
-    function addTask() {
-      const text = document.getElementById('taskText').value.trim();
-      const category = document.getElementById('taskCategory').value;
-      if (!text) return;
-      state.tasks.push({ id: Date.now(), category, text, completed: false });
-      document.getElementById('taskText').value = '';
-      saveState();
-    }
-
-    function toggleTask(id) {
-      const task = state.tasks.find(t => t.id === id);
-      if (task) { task.completed = !task.completed; saveState(); }
-    }
-
-    function deleteTask(id) {
-      state.tasks = state.tasks.filter(t => t.id !== id);
-      saveState();
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    }
-
-    render();
-  </script>
+        // 初期化実行
+        updateSettings();
+    </script>
 </body>
 </html>
+"""
+
+with open("henaigu_budget_app.html", "w", encoding="utf-8") as f:
+    f.write(html_code)
