@@ -38,7 +38,7 @@
     /* 自作イラスト・Canvaヘッダー表示エリア */
     .header-banner {
       width: 100%;
-      height: 140px;
+      height: 180px;            /* 画像が見やすいように高さを調整 */
       background-color: #fce7f3;
       border: 2px dashed #f472b6;
       border-radius: 16px;
@@ -55,7 +55,7 @@
     .header-banner img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;     /* ★画像全体を切らずに枠内に収める設定 */
     }
 
     .header-placeholder {
@@ -396,7 +396,7 @@
   <!-- 自作イラスト・Canvaヘッダー -->
   <div class="header-banner" onclick="changeHeaderImage()">
     <div id="headerContent" class="header-placeholder">
-      🌸 タップして画像URLを変更 🌸
+      🌸 タップして画像URLを設定 🌸
     </div>
   </div>
 
@@ -509,11 +509,14 @@
   </div>
 
 <script>
+  // ★ 新しい画像URLを設定
+  const NEW_HEADER_IMAGE = 'https://i.ibb.co/HTr381Vd/image.png';
+
   let state = JSON.parse(localStorage.getItem('budget_app_v3_state') || 'null') || {
     startDay: 1,
     accumulated: 0,
     budget: 10000,
-    headerImg: 'https://i.ibb.co/XZtvMGV2/image.png',
+    headerImg: NEW_HEADER_IMAGE,
     isSettled: false,
     lastSettledAmount: 0,
     cat1: [{ name: '食料品', price: 0 }, { name: '日用品', price: 0 }],
@@ -521,10 +524,8 @@
     cat3: [{ name: '趣味', price: 0 }]
   };
 
-  // 画像初期値が空の場合も強制的に設定
-  if (!state.headerImg) {
-    state.headerImg = 'https://i.ibb.co/XZtvMGV2/image.png';
-  }
+  // 過去の古いURLが残っている場合も自動で最新画像に上書き
+  state.headerImg = NEW_HEADER_IMAGE;
 
   let activeTarget = null;
   let calcExpr = '0';
