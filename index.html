@@ -425,20 +425,20 @@
 
         <div class="input-row" id="startDayRow" style="display:none;">
           <label for="startDay">開始日 (〇日)</label>
-          <input type="number" id="startDay" value="25" min="1" max="28" onchange="updateSettings()">
+          <input type="number" id="startDay" value="25" min="1" max="28" onchange="updateSettings()" oninput="updateSettings()">
         </div>
 
         <div class="input-row">
           <label for="inputTotal">今期の全生活費</label>
-          <input type="number" id="inputTotal" value="80000" onchange="updateSettings()">
+          <input type="number" id="inputTotal" value="80000" onchange="updateSettings()" oninput="updateSettings()">
         </div>
         <div class="input-row">
           <label for="inputBigExpense">大型出費 (事前除外)</label>
-          <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()">
+          <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()" oninput="updateSettings()">
         </div>
         <div class="input-row">
           <label for="inputDays">今期の使う設定日数</label>
-          <input type="number" id="inputDays" value="10" onchange="updateSettings()">
+          <input type="number" id="inputDays" value="10" min="1" onchange="updateSettings()" oninput="updateSettings()">
         </div>
       </div>
     </div>
@@ -495,6 +495,7 @@
         <button class="calc-btn" onclick="calcInput('3')">3</button>
 
         <button class="calc-btn" onclick="calcInput('0')">0</button>
+
         <button class="calc-btn" onclick="calcInput('00')">00</button>
       </div>
 
@@ -637,19 +638,36 @@
     }
 
     function updateSettings() {
+      const oldSettingDays = state.settingDays || 1;
+      const oldRemainingDays = state.remainingDays;
+
       state.periodType = document.getElementById('periodType').value;
       state.startDay = Number(document.getElementById('startDay').value) || 25;
       state.totalBudget = Number(document.getElementById('inputTotal').value) || 0;
       state.bigExpense = Number(document.getElementById('inputBigExpense').value) || 0;
       
-      const newDays = Number(document.getElementById('inputDays').value) || 1;
-      if (state.remainingDays > newDays) state.remainingDays = newDays;
-      state.settingDays = newDays;
+      const newSettingDays = Math.max(1, Number(document.getElementById('inputDays').value) || 1);
 
-      if (state.remainingDays === state.settingDays && !state.isSettledToday) {
-        state.remainingBudget = state.totalBudget - state.bigExpense - state.todaySpentTotal;
+      // 設定日数が変更された場合のリアルタイム再計算
+      if (newSettingDays !== oldSettingDays) {
+        // すでに経過した日数 (精算済みの回数) を算出
+        const usedDays = oldSettingDays - oldRemainingDays;
+        state.settingDays = newSettingDays;
+        // 新しい設定日数から経過日数を引き、新しい残り日数を決定（最低0日）
+        state.remainingDays = Math.max(0, newSettingDays - usedDays);
       }
+
+      // 予算額のベース調整
+      const baseNetBudget = state.totalBudget - state.bigExpense;
+      if (usedDaysCount() === 0 && !state.isSettledToday) {
+        state.remainingBudget = baseNetBudget;
+      }
+
       saveState();
+    }
+
+    function usedDaysCount() {
+      return (state.settingDays || 1) - (state.remainingDays || 0);
     }
 
     /* 電卓・上乗せロジック */
@@ -699,7 +717,7 @@
       addExpense();
       if (!state.isSettledToday) {
         state.isSettledToday = true;
-        state.remainingDays -= 1;
+        state.remainingDays = Math.max(0, state.remainingDays - 1);
       }
       closeCalcModal();
       saveState();
