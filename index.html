@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <<title>偏愛Tool｜日割りメリハリ</title>
+  
+  <title>偏愛Tool｜日割りメリハリ</title>
   
   <!-- OGP設定（LINE・SNSシェア用） -->
   <meta property="og:title" content="偏愛Tool｜日割りメリハリ">
   <meta property="og:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
   <meta property="og:site_name" content="偏愛Tool">
+  <meta property="og:image" content="https://i.ibb.co/6JgZD91P/3.png">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter (X) 用カード設定 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="偏愛Tool｜日割りメリハリ">
+  <meta name="twitter:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
+  <meta name="twitter:image" content="https://i.ibb.co/6JgZD91P/3.png">
+
   <style>
     :root {
       --bg-color: #fff5f7;            /* やわらかいピンク系背景 */
@@ -528,7 +538,7 @@
   </div>
 
   <script>
-    const DEFAULT_HEADER = 'https://i.ibb.co/HTr381Vd/image.png';
+    const DEFAULT_HEADER = 'https://i.ibb.co/6JgZD91P/3.png';
 
     let state = JSON.parse(localStorage.getItem('nmd_app_state_v4') || 'null') || {
       headerImg: DEFAULT_HEADER,
@@ -655,10 +665,8 @@
 
       // 設定日数が変更された場合のリアルタイム再計算
       if (newSettingDays !== oldSettingDays) {
-        // すでに経過した日数 (精算済みの回数) を算出
         const usedDays = oldSettingDays - oldRemainingDays;
         state.settingDays = newSettingDays;
-        // 新しい設定日数から経過日数を引き、新しい残り日数を決定（最低0日）
         state.remainingDays = Math.max(0, newSettingDays - usedDays);
       }
 
