@@ -67,7 +67,7 @@
     /* 修正後 */
 .header-banner {
     width: 100%;
-    padding: 12px; /* ★追加：枠の中に十分な余白を作って画像を収める */
+    height: 140px; /* ★高さをビシッと固定します */
     background-color: #ffffff;
     border: 2px solid var(--border-color);
     border-radius: 18px;
@@ -75,17 +75,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: hidden; /* ★枠からはみ出た部分をしっかりカット */
+    padding: 8px;    /* ★内側に少し余白を作る */
 }
-      cursor: pointer;
-      position: relative;
-    }
 
-    .header-banner img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+.header-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ★枠の中に全体が綺麗に収まるように自動縮小 */
+}
 
     .header-placeholder {
       color: var(--primary-dark);
