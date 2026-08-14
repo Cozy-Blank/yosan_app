@@ -67,9 +67,10 @@
     /* 修正後 */
 /* 長方形イラスト枠（外枠・背景） */
 
+/* 長方形イラスト枠（外枠・背景） */
 .header-banner {
     width: 100%;
-    aspect-ratio: 3 / 1;                 /* ★枠の比率をきれいな横長に固定 */
+    aspect-ratio: 4.5 / 1;               /* ★縦幅をスリム（補足）にして枠の圧迫感を減らします */
     background-color: #ffffff;
     border: 2px solid var(--border-color);
     border-radius: 18px;
@@ -77,7 +78,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;                     /* ★枠外へのはみ出しをカットして型崩れを防ぐ */
+    overflow: hidden;                     /* 枠からはみ出ないように固定 */
     box-sizing: border-box;
 }
 
@@ -85,10 +86,9 @@
 .header-banner img {
     width: 100%;
     height: 100%;
-    object-fit: contain;                 /* ★イラスト全体を切らずに枠内に収める */
-    padding-top: 12px;                   /* ★イラストの上側に余白を作る（お好みで調整） */
-    padding-bottom: 5px;                 /* ★下側の余白調整 */
-    pointer-events: none;                /* ★タップ・クリックによる変更をロック */
+    object-fit: cover;                   /* ★contain から cover に変更！枠全体に大きく表示させます */
+    object-position: center;              /* 画像の中心を基準に配置 */
+    pointer-events: none;                /* タップ変更ロック */
     box-sizing: border-box;
 }
 
