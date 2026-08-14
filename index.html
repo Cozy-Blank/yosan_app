@@ -68,7 +68,8 @@
 /* 長方形イラスト枠（外枠・背景） */
 .header-banner {
     width: 100%;
-    position: relative;
+    /* ★比率を 4.5 / 1 にして高さを現在の半分程度（スリム）にします */
+    aspect-ratio: 4.5 / 1; 
     background-color: #ffffff;
     border: 2px solid var(--border-color);
     border-radius: 18px;
@@ -76,19 +77,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: visible !important; /* ★枠外への飛び出し（ダイナミック表示）を許可 */
-    padding: 10px 0;             /* 上下の基本余白 */
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden !important; 
 }
 
-/* ヘッダー画像本体（ダイナミック・立体配置） */
 .header-banner img {
-    width: 105%;                 /* ★横幅を枠より少し大きくしてダイナミックに */
-    height: auto;
-    max-height: none !important;
-    margin-top: -15px;           /* ★上側に少し突き出させる */
-    margin-bottom: -10px;        /* ★下側にも少し突き出させる */
-    object-fit: contain;
-    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1)); /* ダイナミックさを強調する影 */
+    width: 100%;
+    height: 100%;
+    /* ★横長枠の全体に画像をぴったり合わせます */
+    object-fit: cover; 
+    border-radius: 16px; 
 }
 
     .header-placeholder {
