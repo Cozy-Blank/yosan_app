@@ -66,10 +66,10 @@
 
     /* 修正後 */
 /* 長方形イラスト枠（外枠・背景） */
+/* 長方形イラスト枠（外枠・背景） */
 .header-banner {
     width: 100%;
-    /* ★比率を 4.5 / 1 にして高さを現在の半分程度（スリム）にします */
-    aspect-ratio: 3.5 / 1; 
+    /* aspect-ratio と overflow: hidden を削除し、高さの制限を解除します */
     background-color: #ffffff;
     border: 2px solid var(--border-color);
     border-radius: 18px;
@@ -77,18 +77,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding-top: 15px;    /* ★枠の上側に直接15pxの余白を作って広げる */
+    padding-bottom: 5px; /* 下側の微調整 */
     box-sizing: border-box;
-    overflow: hidden !important; 
 }
 
 .header-banner img {
     width: 100%;
-    height: 100%;
-    /* ★横長枠の全体に画像をぴったり合わせます */
-    object-fit: cover; 
-    border-radius: 16px; 
+    height: auto;
+    object-fit: contain;
+    pointer-events: none; /* ★タップによる変更をロック */
 }
+
 
     .header-placeholder {
       color: var(--primary-dark);
@@ -381,7 +381,9 @@
   <div class="app-container">
     <!-- ヘッダーイラスト（長方形カードフレーム：背景白） -->
     <div class="header-banner-wrapper">
-      <div class="header-banner" onclick="changeHeaderImage()">
+      <div class="header-banner" >
+        <img src="https://i.ibb.co/cS00C43v/3.png" alt="ヘッダー画像" class="header-img">
+</div>
         <div id="headerContent" class="header-placeholder">
           🌸 タップしてイラストURLを設定 🌸
         </div>
