@@ -64,17 +64,19 @@
       margin-bottom: 2px;
     }
 
-    .header-banner {
-      width: 100%;
-      aspect-ratio: 2.3 / 1;
-      background-color: #ffffff;
-      border: 2px solid var(--border-color);
-      border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+    /* 修正後 */
+.header-banner {
+    width: 100%;
+    padding: 12px; /* ★追加：枠の中に十分な余白を作って画像を収める */
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
       cursor: pointer;
       position: relative;
     }
