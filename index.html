@@ -65,10 +65,10 @@
     }
 
     /* 修正後 */
+/* 長方形イラスト枠（外枠・背景） */
 .header-banner {
     width: 100%;
-    /* 縦横比を少し縦長側に広げて枠をゆったり作ります */
-    aspect-ratio: 1.85 / 1; 
+    position: relative;
     background-color: #ffffff;
     border: 2px solid var(--border-color);
     border-radius: 18px;
@@ -76,16 +76,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* 上下の余白（14px）をしっかり確保して画像を少し押し下げます */
-    padding: 14px 10px; 
-    box-sizing: border-box;
-    overflow: hidden;
+    overflow: visible !important; /* ★枠外への飛び出し（ダイナミック表示）を許可 */
+    padding: 10px 0;             /* 上下の基本余白 */
 }
 
+/* ヘッダー画像本体（ダイナミック・立体配置） */
 .header-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; 
+    width: 105%;                 /* ★横幅を枠より少し大きくしてダイナミックに */
+    height: auto;
+    max-height: none !important;
+    margin-top: -15px;           /* ★上側に少し突き出させる */
+    margin-bottom: -10px;        /* ★下側にも少し突き出させる */
+    object-fit: contain;
+    filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.1)); /* ダイナミックさを強調する影 */
 }
 
     .header-placeholder {
