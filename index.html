@@ -390,144 +390,52 @@
       </div>
     </div>
 
-    <!-- 本日の使える予算 -->
-    <div class="card" style="border-left: 6px solid var(--primary);">
-      <div class="card-title">
-        <span>本日の使える予算 (買い物1回分)</span>
-        <span style="font-size:0.75rem; color:var(--primary-dark); font-weight:bold;">自動計算中</span>
-      </div>
-
-      <div class="period-range-box" id="periodRangeText">
-        対象期間: ----/--/-- 〜 ----/--/--
-      </div>
-
-      <div>
-        <span class="big-number" id="todayBudget">0</span><span class="unit">円</span>
-      </div>
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="label">残り「使う日」</div>
-          <div class="value"><span id="remainingDays">0</span> 日</div>
-        </div>
-        <div class="stat-box">
-          <div class="label">残りの生活費</div>
-          <div class="value"><span id="remainingBudget">0</span> 円</div>
-        </div>
-      </div>
-
-      <button id="settleTriggerBtn" class="btn btn-primary" style="margin-top:12px;" onclick="openCalcModal()">本日の買い物を上乗せ・精算</button>
-
-      <div id="settledBadge" class="settled-badge" style="display: none;">
-        <span>✨ 本日精算済み（本日利用: ¥<span id="settledTodaySum">0</span>）</span>
-        <button class="unsettle-btn" onclick="unsettle()">やり直す</button>
-      </div>
-    </div>
-
-    <!-- カスタマイズ枠（ご褒美枠） -->
-    <div class="card" style="background:#faf5ff; border: 1px solid #e9d5ff;">
-      <div class="card-title">
-        <span class="badge-frame">今期の偏愛・ご褒美枠 (ブースト用)</span>
-      </div>
-      <div>
-        <span class="big-number" style="color:#7e22ce;" id="rewardAmount">0</span><span class="unit">円</span>
-      </div>
-    </div>
-
-    <!-- 条件設定 -->
-    <div class="card">
-      <div class="card-title"><span>期間・予算の設定</span></div>
-      <div class="input-group">
-        <div class="input-row">
-          <label for="periodType">集計の範囲</label>
-          <select id="periodType" onchange="updateSettings()">
-            <option value="monthly">1日〜月末締め</option>
-            <option value="customNext">〇日〜翌月〇日締め</option>
-          </select>
-        </div>
-
-        <div class="input-row" id="startDayRow" style="display:none;">
-          <label for="startDay">開始日 (〇日)</label>
-          <input type="number" id="startDay" value="25" min="1" max="28" onchange="updateSettings()" oninput="updateSettings()">
-        </div>
-
-        <div class="input-row">
-          <label for="inputTotal">手元管理費</label>
-          <input type="number" id="inputTotal" value="80000" onchange="updateSettings()" oninput="updateSettings()">
-        </div>
-        <div class="input-row">
-          <label for="inputBigExpense">大型出費 (事前除外)</label>
-          <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()" oninput="updateSettings()">
-        </div>
-        <div class="input-row">
-          <label for="inputDays">設定日数</label>
-          <input type="number" id="inputDays" value="10" min="1" onchange="updateSettings()" oninput="updateSettings()">
-        </div>
-      </div>
-    </div>
-
-    <!-- タスクメモ -->
-    <div class="card">
-      <div class="card-title"><span>予定＆支払いタスク メモ</span></div>
-      <div class="task-input-container">
-        <select id="taskCategory">
-          <option value="お出かけ">お出かけ</option>
-          <option value="支払い">支払い</option>
-        </select>
-        <input type="text" id="taskText" placeholder="例: 週末ランチ、ネット購入">
-        <button class="btn-small" onclick="addTask()">追加</button>
-      </div>
-      <ul class="task-list" id="taskList"></ul>
-    </div>
-
-    <div class="card" style="text-align: center;">
-      <button class="btn btn-secondary" onclick="openMonthEndModal()">締め処理（次期へ繰り越し）を行う</button>
-    </div>
+    <!-- 期間・予算の設定カード -->
+<<!-- 期間・予算の設定カード -->
+<div class="card">
+  <div class="card-title">期間・予算の設定</div>
+  
+  <!-- 集計範囲 -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <span style="font-size: 0.85rem; font-weight: 700;">集計の範囲</span>
+    <select id="periodType" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid var(--border-color);">
+      <option value="monthly">1日〜月末締め</option>
+      <option value="customNext">締日指定（例:25日〜）</option>
+      <option value="customRange">日付を自由に指定</option>
+    </select>
   </div>
 
-  <!-- 電卓上乗せモーダル -->
-  <div class="modal-overlay" id="calcModal">
-    <div class="modal-content">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span style="font-weight:800; font-size:0.9rem;">本日の利用額を上乗せ追加</span>
-        <span style="font-size:0.8rem; color:var(--text-muted);">本日累計: ¥<span id="calcTodayTotal">0</span></span>
-      </div>
-      
-      <div class="calc-display" id="calcDisplay">0</div>
-
-      <div class="calc-grid">
-        <button class="calc-btn clear" onclick="calcInput('C')">C</button>
-        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-        <button class="calc-btn op" onclick="calcInput('*')">×</button>
-        <button class="calc-btn op" onclick="calcInput('-')">-</button>
-
-        <button class="calc-btn" onclick="calcInput('7')">7</button>
-        <button class="calc-btn" onclick="calcInput('8')">8</button>
-        <button class="calc-btn" onclick="calcInput('9')">9</button>
-        <button class="calc-btn op" onclick="calcInput('+')">+</button>
-
-        <button class="calc-btn" onclick="calcInput('4')">4</button>
-        <button class="calc-btn" onclick="calcInput('5')">5</button>
-        <button class="calc-btn" onclick="calcInput('6')">6</button>
-
-        <button class="calc-btn add" onclick="addExpense()">＋ 上乗せ記録</button>
-
-        <button class="calc-btn" onclick="calcInput('1')">1</button>
-        <button class="calc-btn" onclick="calcInput('2')">2</button>
-
-        <button class="calc-btn" onclick="calcInput('3')">3</button>
-
-        <button class="calc-btn" onclick="calcInput('0')">0</button>
-
-        <button class="calc-btn" onclick="calcInput('00')">00</button>
-      </div>
-
-      <div style="display:flex; gap:10px; margin-top:14px;">
-        <button class="btn btn-secondary" onclick="closeCalcModal()">閉じる</button>
-        <button class="btn btn-primary" onclick="confirmDailySettle()">本日分を確定して精算</button>
-      </div>
-    </div>
+  <!-- 自由日付指定用（customRangeが選ばれた時のみ表示） -->
+  <div id="customRangeRow" style="display: none; gap: 8px; align-items: center; margin-bottom: 10px;">
+    <input type="date" id="startDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
+    〜
+    <input type="date" id="endDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
   </div>
 
+  <!-- 締め日指定用 -->
+  <div id="startDayRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <span style="font-size: 0.85rem; font-weight: 700;">開始日（毎月）</span>
+    <input type="number" id="startDay" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 80px;">
+  </div>
+
+  <!-- 手元管理費 -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <span style="font-size: 0.85rem; font-weight: 700;">手元管理費</span>
+    <input type="number" id="inputTotal" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+  </div>
+
+  <!-- 大型出費 -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
+    <input type="number" id="inputBigExpense" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+  </div>
+
+  <!-- 設定日数 -->
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <span style="font-size: 0.85rem; font-weight: 700;">設定日数</span>
+    <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+  </div>
+</div>
   <!-- 締めモーダル -->
   <div class="modal-overlay" id="monthEndModal">
     <div class="modal-content">
@@ -544,13 +452,17 @@
     </div>
   </div>
 
+  
+
   <script>
-    const DEFAULT_HEADER = 'https://i.ibb.co/pjGSsHNm/teiku.png';
+    const DEFAULT_HEADER = 'https://i.ibb.co/6JgZD91P/3.png';
 
     let state = JSON.parse(localStorage.getItem('nmd_app_state_v4') || 'null') || {
       headerImg: DEFAULT_HEADER,
-      periodType: 'monthly', // 'monthly' | 'customNext'
+      periodType: 'monthly', // 'monthly' | 'customNext' | 'customRange'
       startDay: 25,
+      startDate: '',
+      endDate: '',
       totalBudget: 80000,
       bigExpense: 10000,
       settingDays: 10,
@@ -569,14 +481,6 @@
       render();
     }
 
-    function changeHeaderImage() {
-      const url = prompt('画像のURLを入力してください:', state.headerImg || '');
-      if (url !== null && url.trim() !== '') {
-        state.headerImg = url.trim();
-        saveState();
-      }
-    }
-
     function getPeriodRange() {
       const today = new Date();
       let start, end;
@@ -584,6 +488,11 @@
       if (state.periodType === 'monthly') {
         start = new Date(today.getFullYear(), today.getMonth(), 1);
         end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      } else if (state.periodType === 'customRange' && state.startDate && state.endDate) {
+        return { 
+          startText: state.startDate.replace(/-/g, '/'), 
+          endText: state.endDate.replace(/-/g, '/') 
+        };
       } else {
         const sDay = Math.min(Math.max(state.startDay || 25, 1), 28);
         if (today.getDate() >= sDay) {
@@ -594,7 +503,7 @@
           end = new Date(today.getFullYear(), today.getMonth(), sDay - 1);
         }
       }
-      return { start, end };
+      return { startText: formatDate(start), endText: formatDate(end) };
     }
 
     function formatDate(d) {
@@ -604,59 +513,78 @@
     function render() {
       // ヘッダー画像
       const bannerBox = document.getElementById('headerContent');
-      if (state.headerImg) {
-        bannerBox.innerHTML = `<img src="${state.headerImg}" alt="Header" onerror="this.onerror=null; alert('画像が読み込めませんでした');">`;
-      } else {
-        bannerBox.innerHTML = `🌸 タップしてイラストURLを設定 🌸`;
+      if (bannerBox) {
+        if (state.headerImg) {
+          bannerBox.innerHTML = `<img src="${state.headerImg}" alt="Header" class="header-img">`;
+        } else {
+          bannerBox.innerHTML = `🌸 タップしてイラストURLを設定 🌸`;
+        }
       }
 
-      // 設定エリアの初期反映
-      document.getElementById('periodType').value = state.periodType;
-      document.getElementById('startDay').value = state.startDay;
-      document.getElementById('inputTotal').value = state.totalBudget;
-      document.getElementById('inputBigExpense').value = state.bigExpense;
-      document.getElementById('inputDays').value = state.settingDays;
+      // 設定エリアの初期反映（要素が存在するかチェックして代入）
+      if (document.getElementById('periodType')) document.getElementById('periodType').value = state.periodType;
+      if (document.getElementById('startDay')) document.getElementById('startDay').value = state.startDay;
+      if (document.getElementById('startDate')) document.getElementById('startDate').value = state.startDate || '';
+      if (document.getElementById('endDate')) document.getElementById('endDate').value = state.endDate || '';
+      if (document.getElementById('inputTotal')) document.getElementById('inputTotal').value = state.totalBudget;
+      if (document.getElementById('inputBigExpense')) document.getElementById('inputBigExpense').value = state.bigExpense;
+      if (document.getElementById('inputDays')) document.getElementById('inputDays').value = state.settingDays;
 
-      document.getElementById('startDayRow').style.display = state.periodType === 'customNext' ? 'flex' : 'none';
+      // 表示切替
+      if (document.getElementById('startDayRow')) {
+        document.getElementById('startDayRow').style.display = state.periodType === 'customNext' ? 'flex' : 'none';
+      }
+      if (document.getElementById('customRangeRow')) {
+        document.getElementById('customRangeRow').style.display = state.periodType === 'customRange' ? 'flex' : 'none';
+      }
 
       // 期間範囲テキストの更新
       const range = getPeriodRange();
-      document.getElementById('periodRangeText').innerText = `対象期間: ${formatDate(range.start)} 〜 ${formatDate(range.end)}`;
+      const periodRangeEl = document.getElementById('periodRangeText');
+      if (periodRangeEl) {
+        periodRangeEl.innerText = `対象期間: ${range.startText} 〜 ${range.endText}`;
+      }
 
-      document.getElementById('remainingDays').innerText = state.remainingDays;
-      document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
+      if (document.getElementById('remainingDays')) document.getElementById('remainingDays').innerText = state.remainingDays;
+      if (document.getElementById('remainingBudget')) document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
 
       const todayBudget = state.remainingDays > 0 ? Math.floor(state.remainingBudget / state.remainingDays) : 0;
-      document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
-      document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
+      if (document.getElementById('todayBudget')) document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
+      if (document.getElementById('rewardAmount')) document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
 
       // 精算状態の制御
-      if (state.isSettledToday) {
-        document.getElementById('settleTriggerBtn').style.display = 'none';
-        document.getElementById('settledBadge').style.display = 'flex';
-        document.getElementById('settledTodaySum').innerText = state.todaySpentTotal.toLocaleString();
-      } else {
-        document.getElementById('settleTriggerBtn').style.display = 'block';
-        document.getElementById('settledBadge').style.display = 'none';
+      if (document.getElementById('settleTriggerBtn') && document.getElementById('settledBadge')) {
+        if (state.isSettledToday) {
+          document.getElementById('settleTriggerBtn').style.display = 'none';
+          document.getElementById('settledBadge').style.display = 'flex';
+          if (document.getElementById('settledTodaySum')) {
+            document.getElementById('settledTodaySum').innerText = state.todaySpentTotal.toLocaleString();
+          }
+        } else {
+          document.getElementById('settleTriggerBtn').style.display = 'block';
+          document.getElementById('settledBadge').style.display = 'none';
+        }
       }
 
       // タスク表示
       const taskListEl = document.getElementById('taskList');
-      taskListEl.innerHTML = '';
-      state.tasks.forEach(task => {
-        const li = document.createElement('li');
-        li.className = `task-item ${task.completed ? 'completed' : ''}`;
-        const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
-        li.innerHTML = `
-          <div>
-            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-            <span class="task-badge ${badgeClass}">${task.category}</span>
-            <span style="font-size:0.85rem; font-weight:700;">${escapeHtml(task.text)}</span>
-          </div>
-          <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
-        `;
-        taskListEl.appendChild(li);
-      });
+      if (taskListEl) {
+        taskListEl.innerHTML = '';
+        state.tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.className = `task-item ${task.completed ? 'completed' : ''}`;
+          const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
+          li.innerHTML = `
+            <div>
+              <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+              <span class="task-badge ${badgeClass}">${task.category}</span>
+              <span style="font-size:0.85rem; font-weight:700;">${escapeHtml(task.text)}</span>
+            </div>
+            <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
+          `;
+          taskListEl.appendChild(li);
+        });
+      }
     }
 
     function updateSettings() {
@@ -664,46 +592,45 @@
       const oldRemainingDays = state.remainingDays;
 
       state.periodType = document.getElementById('periodType').value;
-      state.startDay = Number(document.getElementById('startDay').value) || 25;
-      state.totalBudget = Number(document.getElementById('inputTotal').value) || 0;
-      state.bigExpense = Number(document.getElementById('inputBigExpense').value) || 0;
+      state.startDay = Number(document.getElementById('startDay')?.value) || 25;
+      state.startDate = document.getElementById('startDate')?.value || '';
+      state.endDate = document.getElementById('endDate')?.value || '';
+      state.totalBudget = Number(document.getElementById('inputTotal')?.value) || 0;
+      state.bigExpense = Number(document.getElementById('inputBigExpense')?.value) || 0;
       
-      const newSettingDays = Math.max(1, Number(document.getElementById('inputDays').value) || 1);
+      const newSettingDays = Math.max(1, Number(document.getElementById('inputDays')?.value) || 1);
 
-      // 設定日数が変更された場合のリアルタイム再計算
-      if (newSettingDays !== oldSettingDays) {
-        const usedDays = oldSettingDays - oldRemainingDays;
-        state.settingDays = newSettingDays;
-        state.remainingDays = Math.max(0, newSettingDays - usedDays);
-      }
+      // 設定日数変更時の残り日数計算
+      const usedDays = oldSettingDays - oldRemainingDays;
+      state.settingDays = newSettingDays;
+      state.remainingDays = Math.max(0, newSettingDays - usedDays);
 
-      // 予算額のベース調整
-      const baseNetBudget = state.totalBudget - state.bigExpense;
-      if (usedDaysCount() === 0 && !state.isSettledToday) {
-        state.remainingBudget = baseNetBudget;
-      }
+      // 残りの生活費を再計算（手元管理費 - 大型出費）
+      state.remainingBudget = state.totalBudget - state.bigExpense - state.todaySpentTotal;
 
       saveState();
     }
 
-    function usedDaysCount() {
-      return (state.settingDays || 1) - (state.remainingDays || 0);
-    }
+    // 初回読み込み時に描画
+    document.addEventListener('DOMContentLoaded', () => {
+      render();
+    });
 
-    /* 電卓・上乗せロジック */
+    /* 電卓・精算・タスク用などの共通処理 */
     function openCalcModal() {
       calcExpr = '0';
       updateCalcDisplay();
-      document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
-      document.getElementById('calcModal').classList.add('active');
+      if (document.getElementById('calcTodayTotal')) {
+        document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
+      }
+      document.getElementById('calcModal')?.classList.add('active');
     }
 
-    function closeCalcModal() { document.getElementById('calcModal').classList.remove('active'); }
+    function closeCalcModal() { document.getElementById('calcModal')?.classList.remove('active'); }
 
     function calcInput(val) {
-      if (val === 'C') {
-        calcExpr = '0';
-      } else {
+      if (val === 'C') { calcExpr = '0'; } 
+      else {
         if (calcExpr === '0' && !isNaN(val)) calcExpr = val;
         else calcExpr += val;
       }
@@ -711,7 +638,9 @@
     }
 
     function updateCalcDisplay() {
-      document.getElementById('calcDisplay').innerText = calcExpr;
+      if (document.getElementById('calcDisplay')) {
+        document.getElementById('calcDisplay').innerText = calcExpr;
+      }
     }
 
     function addExpense() {
@@ -725,7 +654,9 @@
           state.remainingBudget -= val;
           calcExpr = '0';
           updateCalcDisplay();
-          document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
+          if (document.getElementById('calcTodayTotal')) {
+            document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
+          }
           saveState();
         }
       } catch (e) {
@@ -744,7 +675,7 @@
     }
 
     function unsettle() {
-      if (confirm('本日の精算を取り消しますか？（利用額は戻り、使う日数も1日戻ります）')) {
+      if (confirm('本日の精算を取り消しますか？')) {
         state.remainingBudget += state.todaySpentTotal;
         state.todaySpentTotal = 0;
         state.remainingDays += 1;
@@ -753,17 +684,20 @@
       }
     }
 
-    /* 月末・締め処理 */
     function openMonthEndModal() {
-      document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
-      document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
-      document.getElementById('monthEndModal').classList.add('active');
+      if (document.getElementById('modalEndRemaining')) {
+        document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
+      }
+      if (document.getElementById('customizeAmount')) {
+        document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
+      }
+      document.getElementById('monthEndModal')?.classList.add('active');
     }
 
-    function closeMonthEndModal() { document.getElementById('monthEndModal').classList.remove('active'); }
+    function closeMonthEndModal() { document.getElementById('monthEndModal')?.classList.remove('active'); }
 
     function submitMonthEnd() {
-      const customVal = Number(document.getElementById('customizeAmount').value) || 0;
+      const customVal = Number(document.getElementById('customizeAmount')?.value) || 0;
       state.rewardFrame = customVal;
       state.remainingDays = state.settingDays;
       state.remainingBudget = state.totalBudget - state.bigExpense;
@@ -774,7 +708,6 @@
       alert('締め処理が完了しました！');
     }
 
-    /* タスク操作 */
     function addTask() {
       const text = document.getElementById('taskText').value.trim();
       const category = document.getElementById('taskCategory').value;
@@ -797,8 +730,6 @@
     function escapeHtml(str) {
       return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     }
-
-    render();
-  </script>
+</script>
 </body>
 </html>
