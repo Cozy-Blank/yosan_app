@@ -9,7 +9,7 @@
   <!-- OGP設定（LINE・SNSシェア用） -->
   <meta property="og:title" content="偏愛Tool｜日割りメリハリ">
   <meta property="og:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
-  <meta property="og:site_name" content="https://i.ibb.co/8n5y2zC8/teiku.png"偏愛Tool">
+  <meta property="og:site_name" content="https://i.ibb.co/pjGSsHNm/teiku.png"偏愛Tool">
   <meta property="og:image" content="">
   <meta property="og:type" content="website">
   
@@ -17,7 +17,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="偏愛Tool｜日割りメリハリ">
   <meta name="twitter:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
-  <meta name="twitter:image" content="https://i.ibb.co/8n5y2zC8/teiku.png">
+  <meta name="twitter:image" content="https://i.ibb.co/pjGSsHNm/teiku.png">
 
   <style>
     :root {
@@ -102,12 +102,14 @@
     }
 
     .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(244, 114, 182, 0.08);
-      border: 1px solid var(--border-color);
-    }
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px;
+  /* ★影を消して、下側に厚みのある線をつける */
+  box-shadow: none;
+  border: 2px solid var(--border-color);
+  border-bottom: 5px solid var(--border-color); /* 下だけ太くして立体感 */
+}
 
     .card-title {
       font-size: 0.85rem;
@@ -385,7 +387,7 @@
     <!-- ヘッダーイラスト（長方形カードフレーム：背景白） -->
     <div class="header-banner-wrapper">
       <div class="header-banner">
-        <img src="https://i.ibb.co/8n5y2zC8/teiku.png" alt="ヘッダー画像" class="header-img">
+        <img src="https://i.ibb.co/pjGSsHNm/teiku.png" alt="ヘッダー画像" class="header-img">
       </div>
     </div>
 
@@ -450,7 +452,7 @@
         </div>
 
         <div class="input-row">
-          <label for="inputTotal">今期の全生活費</label>
+          <label for="inputTotal">手元管理費</label>
           <input type="number" id="inputTotal" value="80000" onchange="updateSettings()" oninput="updateSettings()">
         </div>
         <div class="input-row">
@@ -458,7 +460,7 @@
           <input type="number" id="inputBigExpense" value="10000" onchange="updateSettings()" oninput="updateSettings()">
         </div>
         <div class="input-row">
-          <label for="inputDays">今期の使う設定日数</label>
+          <label for="inputDays">設定日数</label>
           <input type="number" id="inputDays" value="10" min="1" onchange="updateSettings()" oninput="updateSettings()">
         </div>
       </div>
@@ -544,7 +546,7 @@
   </div>
 
   <script>
-    const DEFAULT_HEADER = 'https://i.ibb.co/8n5y2zC8/teiku.png';
+    const DEFAULT_HEADER = 'https://i.ibb.co/pjGSsHNm/teiku.png';
 
     let state = JSON.parse(localStorage.getItem('nmd_app_state_v4') || 'null') || {
       headerImg: DEFAULT_HEADER,
