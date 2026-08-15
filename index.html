@@ -383,75 +383,100 @@
 <body>
 
  <div class="app-container">
-    <!-- ヘッダーイラスト（長方形カードフレーム：背景白） -->
+    <!-- ヘッダーイラスト -->
     <div class="header-banner-wrapper">
       <div class="header-banner">
-        <img src="https://i.ibb.co/pjGSsHNm/teiku.png" alt="ヘッダー画像" class="header-img">
+        <img src="https://i.ibb.co/6JgZD91P/3.png" alt="ヘッダー画像" class="header-img">
       </div>
     </div>
 
-    <!-- 期間・予算の設定カード -->
-<<!-- 期間・予算の設定カード -->
-<div class="card">
-  <div class="card-title">期間・予算の設定</div>
-  
-  <!-- 集計範囲 -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <span style="font-size: 0.85rem; font-weight: 700;">集計の範囲</span>
-    <select id="periodType" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid var(--border-color);">
-      <option value="monthly">1日〜月末締め</option>
-      <option value="customNext">締日指定（例:25日〜）</option>
-      <option value="customRange">日付を自由に指定</option>
-    </select>
-  </div>
+    <!-- 1. 本日の使える予算カード（復活！） -->
+    <div class="card">
+      <div class="card-title">
+        <span>本日の使える予算 (買い物1回分)</span>
+        <span style="color: var(--primary-dark); font-size: 0.75rem;">自動計算中</span>
+      </div>
+      <div id="periodRangeText" style="text-align: center; color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; margin-bottom: 8px;">
+        対象期間: ----/--/-- 〜 ----/--/--
+      </div>
+      <div style="text-align: center; margin: 10px 0;">
+        <span id="todayBudget" class="big-number">0</span>
+        <span class="unit">円</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残り「使う日」</div>
+          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingDays">0</span> 日</div>
+        </div>
+        <div class="stat-box">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残りの生活費</div>
+          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingBudget">0</span> 円</div>
+        </div>
+      </div>
+      <button id="settleTriggerBtn" class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="openCalcModal()">
+        本日の買い物を上乗せ・精算
+      </button>
+      <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 12px; padding: 10px; background: #fce7f3; border-radius: 12px;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">本日精算済み (利用: <span id="settledTodaySum">0</span>円)</span>
+        <button onclick="unsettle()" style="font-size: 0.75rem; background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">取消</button>
+      </div>
+    </div>
 
-  <!-- 自由日付指定用（customRangeが選ばれた時のみ表示） -->
-  <div id="customRangeRow" style="display: none; gap: 8px; align-items: center; margin-bottom: 10px;">
-    <input type="date" id="startDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
-    〜
-    <input type="date" id="endDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 48%;">
-  </div>
+    <!-- 2. 今期の偏愛・ご褒美枠カード（復活！） -->
+    <div class="card" style="background: #faf5ff; border-color: #f3e8ff;">
+      <div class="card-title" style="color: #7e22ce;">今期の偏愛・ご褒美枠 (ブースト用)</div>
+      <div style="text-align: center; margin: 5px 0;">
+        <span id="rewardAmount" class="big-number" style="color: #7e22ce;">0</span>
+        <span class="unit" style="color: #7e22ce;">円</span>
+      </div>
+    </div>
 
-  <!-- 締め日指定用 -->
-  <div id="startDayRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <span style="font-size: 0.85rem; font-weight: 700;">開始日（毎月）</span>
-    <input type="number" id="startDay" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 80px;">
-  </div>
+    <!-- 3. 期間・予算の設定カード -->
+    <div class="card">
+      <div class="card-title">期間・予算の設定</div>
+      
+      <!-- 集計の範囲 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">集計の範囲</span>
+        <select id="periodType" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid var(--border-color);">
+          <option value="monthly">1日〜月末締め</option>
+          <option value="customNext">締日指定（例:25日〜）</option>
+          <option value="customRange">日付を自由に指定</option>
+        </select>
+      </div>
 
-  <!-- 手元管理費 -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <span style="font-size: 0.85rem; font-weight: 700;">手元管理費</span>
-    <input type="number" id="inputTotal" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
-  </div>
+      <!-- 自由日付指定 -->
+      <div id="customRangeRow" style="display: none; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <input type="date" id="startDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+        〜
+        <input type="date" id="endDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+      </div>
 
-  <!-- 大型出費 -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-    <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
-    <input type="number" id="inputBigExpense" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
-  </div>
+      <!-- 締め日指定 -->
+      <div id="startDayRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">開始日（毎月）</span>
+        <input type="number" id="startDay" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 80px;">
+      </div>
 
-  <!-- 設定日数 -->
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <span style="font-size: 0.85rem; font-weight: 700;">設定日数</span>
-    <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
-  </div>
+      <!-- 手元管理費 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">手元管理費</span>
+        <input type="number" id="inputTotal" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+
+      <!-- 大型出費 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
+        <input type="number" id="inputBigExpense" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+
+      <!-- 設定日数 -->
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem; font-weight: 700;">設定日数</span>
+        <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+    </div>
 </div>
-  <!-- 締めモーダル -->
-  <div class="modal-overlay" id="monthEndModal">
-    <div class="modal-content">
-      <h3 style="margin-bottom:12px; text-align:center;">期間の締め処理</h3>
-      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px; text-align:center;">今期の残り残高: <strong id="modalEndRemaining">0</strong> 円</p>
-      <div class="input-row" style="margin-bottom:16px;">
-        <label>翌期の偏愛枠(ご褒美)にする額</label>
-        <input type="number" id="customizeAmount" value="0">
-      </div>
-      <div style="display:flex; gap:10px;">
-        <button class="btn btn-secondary" onclick="closeMonthEndModal()">キャンセル</button>
-        <button class="btn btn-accent" onclick="submitMonthEnd()">確定して翌期へ</button>
-      </div>
-    </div>
-  </div>
-
   
 
   <script>
