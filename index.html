@@ -3,17 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>日割りメリハリアプリ</title>
+  <title>偏愛Tool - X(Twitter) リンク保存 & 本日予算</title>
   <style>
     :root {
-      --primary: #ff6b81;
-      --primary-hover: #ff4757;
-      --bg: #fff0f3;
+      --primary: #1d9bf0; /* X(Twitter) Blue */
+      --primary-hover: #1a8cd8;
+      --bg: #f7f9fa;
       --card-bg: #ffffff;
-      --text: #2f3542;
-      --accent: #ff7854;
-      --bubble-bg: #ffeaa7;
-      --border-radius: 16px;
+      --text: #0f1419;
+      --text-muted: #536471;
+      --border: #eff3f4;
+      
+      --art-color: #ec4899;
+      --art-bg: #fce7f3;
+      
+      --item-color: #10b981;
+      --item-bg: #d1fae5;
+      
+      --info-color: #f59e0b;
+      --info-bg: #fef3c7;
+
+      --gourmet-color: #ef4444;
+      --gourmet-bg: #fee2e2;
+
+      --other-color: #6b7280;
+      --other-bg: #f3f4f6;
     }
 
     * {
@@ -21,129 +35,83 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      padding: 16px;
-      max-width: 500px;
-      margin: 0 auto;
+      line-height: 1.5;
       padding-bottom: 40px;
     }
 
-    h1 {
+    /* ヘッダー */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px;
       text-align: center;
-      color: var(--primary);
-      font-size: 1.4rem;
-      margin-bottom: 16px;
-      font-weight: 800;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
 
-    .card {
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 12px 12px 0 12px;
+    }
+
+    /* 共通カードスタイル */
+    .form-card {
       background: var(--card-bg);
-      border-radius: var(--border-radius);
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(255, 107, 129, 0.12);
-      border: 2px solid #ffe0e6;
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
     }
 
     .card-title {
-      font-weight: 700;
       font-size: 0.95rem;
-      margin-bottom: 8px;
-      color: #57606f;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--text);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
+    /* 本日使える予算エリア */
     .budget-display {
       text-align: center;
-      padding: 12px;
-      background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
-      color: white;
+      background: linear-gradient(135deg, #1d9bf0 0%, #0284c7 100%);
+      color: #fff;
+      padding: 14px;
       border-radius: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
 
     .budget-amount {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 900;
       line-height: 1.2;
     }
 
-    /* ポップでかわいい吹き出し */
-    .speech-bubble {
-      position: relative;
-      background: #fffae6;
-      border: 2px solid #ffeaa7;
-      color: #d63031;
-      font-weight: 800;
-      font-size: 0.85rem;
-      padding: 8px 12px;
-      border-radius: 18px;
-      margin-bottom: 10px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(255, 234, 167, 0.5);
-      animation: bounce 2s infinite ease-in-out;
+    .budget-inputs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
     }
 
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 30px;
-      border-width: 8px 8px 0;
-      border-style: solid;
-      border-color: #fffae6 transparent;
-      display: block;
-      width: 0;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-3px); }
-    }
-
-    input[type="number"], input[type="text"], select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 2px solid #ffe0e6;
-      border-radius: 10px;
-      font-size: 1rem;
-      outline: none;
-      background: #fff;
-      color: var(--text);
-    }
-
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6b81' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 16px;
-      font-weight: bold;
-    }
-
-    .btn {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
-    }
-
-    .btn:active {
-      background: var(--primary-hover);
+    .budget-inputs input {
+      flex: 1;
     }
 
     /* ToDo / 買い物リスト */
@@ -164,22 +132,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #fff5f7;
+      background: #f8fafc;
       padding: 8px 12px;
       border-radius: 8px;
-      font-size: 0.9rem;
-      border: 1px solid #ffe0e6;
+      font-size: 0.88rem;
+      border: 1px solid var(--border);
     }
 
     .todo-item.completed span {
       text-decoration: line-through;
-      color: #b2bec3;
+      color: var(--text-muted);
+      opacity: 0.6;
     }
 
     .todo-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex: 1;
     }
 
@@ -190,132 +159,303 @@
       cursor: pointer;
     }
 
-    .delete-todo {
+    .delete-todo-btn {
       background: none;
       border: none;
-      color: #ff7675;
+      color: #ef4444;
       font-weight: bold;
       cursor: pointer;
-      font-size: 0.9rem;
       padding: 0 4px;
     }
 
-    .form-group {
+    /* 分類ボタン */
+    .type-selector-wrapper {
+      overflow-x: auto;
       margin-bottom: 12px;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
     }
 
-    label {
+    .type-selector-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .type-selector {
+      display: flex;
+      gap: 6px;
+      width: max-content;
+    }
+
+    .type-btn {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
       font-size: 0.8rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .type-btn.active[data-type="art"] { background: var(--art-bg); color: var(--art-color); border-color: var(--art-color); }
+    .type-btn.active[data-type="item"] { background: var(--item-bg); color: var(--item-color); border-color: var(--item-color); }
+    .type-btn.active[data-type="info"] { background: var(--info-bg); color: var(--info-color); border-color: var(--info-color); }
+    .type-btn.active[data-type="gourmet"] { background: var(--gourmet-bg); color: var(--gourmet-color); border-color: var(--gourmet-color); }
+    .type-btn.active[data-type="other"] { background: var(--other-bg); color: var(--other-color); border-color: var(--other-color); }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #f8fafc;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+    }
+
+    .add-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
       font-weight: 700;
-      color: #747d8c;
-      display: block;
-      margin-bottom: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .add-btn:active {
+      background: var(--primary-hover);
+    }
+
+    /* フィルタータブ */
+    .tabs-wrapper {
+      overflow-x: auto;
+      margin-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tabs-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      width: max-content;
+      padding-bottom: 4px;
+    }
+
+    .tab {
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* リストカード */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .task-item {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .badge-art { background: var(--art-bg); color: var(--art-color); }
+    .badge-item { background: var(--item-bg); color: var(--item-color); }
+    .badge-info { background: var(--info-bg); color: var(--info-color); }
+    .badge-gourmet { background: var(--gourmet-bg); color: var(--gourmet-color); }
+    .badge-other { background: var(--other-bg); color: var(--other-color); }
+
+    .task-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .link-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #f0f9ff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      word-break: break-all;
+      width: fit-content;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
 
-<h1>🎈 日割りメリハリアプリ</h1>
+<header>
+  <h1>🖤 偏愛Tool - リンクストック & ダッシュボード</h1>
+</header>
 
-<!-- 本日の使える予算 -->
-<div class="card">
-  <div class="card-title">💰 本日の使える予算</div>
-  <div class="budget-display">
-    <div class="budget-amount" id="dailyBudgetDisplay">¥0</div>
+<div class="container">
+
+  <!-- ① 今日使えるお金のカラム -->
+  <div class="form-card">
+    <div class="card-title">💰 本日使えるお金</div>
+    <div class="budget-display">
+      <div style="font-size: 0.8rem; opacity: 0.9;">本日の目安予算</div>
+      <div class="budget-amount" id="dailyBudgetDisplay">¥0</div>
+    </div>
+    <div class="budget-inputs">
+      <input type="number" id="totalBudgetInput" placeholder="残金 (例: 30000)" oninput="updateBudget()">
+      <input type="number" id="daysLeftInput" placeholder="残日数 (例: 10)" oninput="updateBudget()">
+    </div>
+
+    <!-- ② 買い物予定リスト・ToDoリスト（直下に配置） -->
+    <div class="card-title" style="margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px;">
+      🛒 買い物予定・ToDoリスト
+    </div>
+    <div class="todo-input-group">
+      <input type="text" id="newTodoInput" placeholder="買うものややることを入力...">
+      <button class="add-btn" style="width: 70px;" onclick="addTodo()">追加</button>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
   </div>
 
-  <!-- 買い物リスト・ToDoリスト欄 -->
-  <div class="card-title" style="margin-top: 14px;">🛒 本日の買い物・ToDoリスト</div>
-  <div class="todo-input-group">
-    <input type="text" id="newTodoInput" placeholder="買うものややることを追加...">
-    <button class="btn" style="width: 70px; margin-top: 0; padding: 0;" onclick="addTodo()">追加</button>
-  </div>
-  <ul class="todo-list" id="todoList"></ul>
-</div>
+  <!-- ③ Xリンク追加フォーム -->
+  <div class="form-card">
+    <div class="card-title">🔗 リンクストック追加</div>
+    <div class="type-selector-wrapper">
+      <div class="type-selector">
+        <button class="type-btn active" data-type="art" onclick="setType('art')">🎨 イラスト/作品</button>
+        <button class="type-btn" data-type="item" onclick="setType('item')">🛒 欲しいもの</button>
+        <button class="type-btn" data-type="info" onclick="setType('info')">📖 役立ち情報</button>
+        <button class="type-btn" data-type="gourmet" onclick="setType('gourmet')">🍱 グルメ</button>
+        <button class="type-btn" data-type="other" onclick="setType('other')">✨ その他</button>
+      </div>
+    </div>
 
-<!-- 今期＆ブースト設定 -->
-<div class="card">
-  <div class="card-title">🏊‍♀️ 流れるプールからやってきた</div>
-  
-  <!-- ポップでかわいい吹き出し -->
-  <div class="speech-bubble">
-    来月分にいくらブーストしちゃう？✨
-  </div>
+    <div class="form-group">
+      <input type="text" id="urlInput" placeholder="X(ツイッター)のリンク(URL)を貼り付け...">
+    </div>
 
-  <div class="form-group">
-    <label for="boostInput">ブースト金額 (円)</label>
-    <input type="number" id="boostInput" placeholder="金額を入力..." onchange="saveData()">
-  </div>
-</div>
+    <div class="form-group">
+      <input type="text" id="memoInput" placeholder="メモ（例：好きな絵師さん、〇〇のレシピ）">
+    </div>
 
-<!-- 基本設定 -->
-<div class="card">
-  <div class="card-title">⚙️ 基本設定</div>
-  
-  <div class="form-group">
-    <label for="totalBudgetInput">今月の総予算 (円)</label>
-    <input type="number" id="totalBudgetInput" placeholder="例: 50000" onchange="saveData()">
+    <button class="add-btn" onclick="addLink()">リンクを保存する</button>
   </div>
 
-  <div class="form-group">
-    <label for="daysSelect">設定日数 (日)</label>
-    <!-- スマホ対応プルダウン化 -->
-    <select id="daysSelect" onchange="saveData()">
-      <!-- JSで1〜31日を自動生成 -->
-    </select>
+  <!-- フィルタータブ -->
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <div class="tab active" onclick="setFilter('all', this)">すべて</div>
+      <div class="tab" onclick="setFilter('art', this)">🎨 イラスト</div>
+      <div class="tab" onclick="setFilter('item', this)">🛒 欲しいもの</div>
+      <div class="tab" onclick="setFilter('info', this)">📖 情報</div>
+      <div class="tab" onclick="setFilter('gourmet', this)">🍱 グルメ</div>
+      <div class="tab" onclick="setFilter('other', this)">✨ その他</div>
+    </div>
   </div>
+
+  <!-- リスト表示部 -->
+  <div id="linkList" class="task-list"></div>
 </div>
 
 <script>
-  // 初期データ読み込み
-  let todos = JSON.parse(localStorage.getItem('merihari_todos') || '[]');
+  let currentType = 'art';
+  let currentFilter = 'all';
+  let links = JSON.parse(localStorage.getItem('x_saved_links') || '[]');
+  let todos = JSON.parse(localStorage.getItem('tool_todos') || '[]');
 
-  // 設定日数のプルダウン（1〜31日）を動的生成
-  const daysSelect = document.getElementById('daysSelect');
-  for (let i = 1; i <= 31; i++) {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = `${i} 日間`;
-    if (i === 30) opt.selected = true; // 初期値30日
-    daysSelect.appendChild(opt);
-  }
+  const typeLabels = {
+    art: 'イラスト/作品',
+    item: '欲しいもの',
+    info: '役立ち情報',
+    gourmet: 'グルメ',
+    other: 'その他'
+  };
 
-  function loadSavedData() {
-    const savedBoost = localStorage.getItem('merihari_boost');
-    const savedTotal = localStorage.getItem('merihari_total');
-    const savedDays = localStorage.getItem('merihari_days');
-
-    if (savedBoost !== null) document.getElementById('boostInput').value = savedBoost;
-    if (savedTotal !== null) document.getElementById('totalBudgetInput').value = savedTotal;
-    if (savedDays !== null) document.getElementById('daysSelect').value = savedDays;
-
-    calculateBudget();
-    renderTodos();
-  }
-
-  function saveData() {
-    const boost = document.getElementById('boostInput').value;
-    const total = document.getElementById('totalBudgetInput').value;
-    const days = document.getElementById('daysSelect').value;
-
-    localStorage.setItem('merihari_boost', boost);
-    localStorage.setItem('merihari_total', total);
-    localStorage.setItem('merihari_days', days);
-
-    calculateBudget();
-  }
-
-  function calculateBudget() {
+  /* --- 予算計算機能 --- */
+  function updateBudget() {
     const total = parseFloat(document.getElementById('totalBudgetInput').value) || 0;
-    const boost = parseFloat(document.getElementById('boostInput').value) || 0;
-    const days = parseInt(document.getElementById('daysSelect').value) || 1;
+    const days = parseFloat(document.getElementById('daysLeftInput').value) || 1;
+    
+    localStorage.setItem('tool_budget_total', document.getElementById('totalBudgetInput').value);
+    localStorage.setItem('tool_budget_days', document.getElementById('daysLeftInput').value);
 
-    // 予算計算（(総予算 + ブースト) / 日数）
-    const daily = Math.floor((total + boost) / days);
+    const daily = Math.floor(total / days);
     document.getElementById('dailyBudgetDisplay').textContent = `¥${daily.toLocaleString()}`;
   }
 
-  /* ToDo / 買い物リスト機能 */
+  function loadBudget() {
+    const savedTotal = localStorage.getItem('tool_budget_total') || '';
+    const savedDays = localStorage.getItem('tool_budget_days') || '';
+    document.getElementById('totalBudgetInput').value = savedTotal;
+    document.getElementById('daysLeftInput').value = savedDays;
+    updateBudget();
+  }
+
+  /* --- ToDo / 買い物リスト機能 --- */
   function addTodo() {
     const input = document.getElementById('newTodoInput');
     const text = input.value.trim();
@@ -340,13 +480,18 @@
   }
 
   function saveAndRenderTodos() {
-    localStorage.setItem('merihari_todos', JSON.stringify(todos));
+    localStorage.setItem('tool_todos', JSON.stringify(todos));
     renderTodos();
   }
 
   function renderTodos() {
     const listEl = document.getElementById('todoList');
     listEl.innerHTML = '';
+
+    if (todos.length === 0) {
+      listEl.innerHTML = '<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 6px 0;">メモ欄は空です</div>';
+      return;
+    }
 
     todos.forEach(todo => {
       const li = document.createElement('li');
@@ -356,10 +501,90 @@
           <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
           <span>${escapeHtml(todo.text)}</span>
         </div>
-        <button class="delete-todo" onclick="deleteTodo(${todo.id})">✕</button>
+        <button class="delete-todo-btn" onclick="deleteTodo(${todo.id})">✕</button>
       `;
       listEl.appendChild(li);
     });
+  }
+
+  /* --- Xリンク保存機能 --- */
+  function setType(type) {
+    currentType = type;
+    document.querySelectorAll('.type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === type);
+    });
+  }
+
+  function setFilter(filter, element) {
+    currentFilter = filter;
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    element.classList.add('active');
+    renderLinks();
+  }
+
+  function addLink() {
+    const urlInput = document.getElementById('urlInput');
+    const memoInput = document.getElementById('memoInput');
+    const url = urlInput.value.trim();
+    const memo = memoInput.value.trim();
+
+    if (!url) {
+      alert('URLを入力してください');
+      return;
+    }
+
+    const newLink = {
+      id: Date.now(),
+      url: url,
+      memo: memo || '無題のリンク',
+      type: currentType,
+      createdAt: new Date().toLocaleDateString('ja-JP')
+    };
+
+    links.unshift(newLink);
+    saveAndRender();
+
+    urlInput.value = '';
+    memoInput.value = '';
+  }
+
+  function deleteLink(id) {
+    links = links.filter(l => l.id !== id);
+    saveAndRender();
+  }
+
+  function saveAndRender() {
+    localStorage.setItem('x_saved_links', JSON.stringify(links));
+    renderLinks();
+  }
+
+  function renderLinks() {
+    const listEl = document.getElementById('linkList');
+    const filteredLinks = links.filter(link => {
+      if (currentFilter === 'all') return true;
+      return link.type === currentFilter;
+    });
+
+    if (filteredLinks.length === 0) {
+      listEl.innerHTML = '<div class="empty-state">保存されているリンクはありません</div>';
+      return;
+    }
+
+    listEl.innerHTML = filteredLinks.map(link => `
+      <div class="task-item">
+        <div class="task-header">
+          <span class="badge badge-${link.type}">${typeLabels[link.type]}</span>
+          <span style="font-size:0.75rem; color: var(--text-muted);">${link.createdAt}</span>
+          <button class="delete-btn" onclick="deleteLink(${link.id})" title="削除">✕</button>
+        </div>
+        <div class="task-title">${escapeHtml(link.memo)}</div>
+        <div>
+          <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="link-box">
+            🔗 X(ツイッター)で開く
+          </a>
+        </div>
+      </div>
+    `).join('');
   }
 
   function escapeHtml(str) {
@@ -368,8 +593,10 @@
     }[match]));
   }
 
-  // 起動時実行
-  loadSavedData();
+  // 初期読み込み
+  loadBudget();
+  renderTodos();
+  renderLinks();
 </script>
 
 </body>
