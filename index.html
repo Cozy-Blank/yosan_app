@@ -20,19 +20,21 @@
   <meta name="twitter:image" content="https://i.ibb.co/pjGSsHNm/teiku.png">
 
   <style>
-  :root {
-    --bg-color: #f3f0f7;            /* ほんのり紫がかったライトグレー */
-    --card-bg: #ffffff;             /* ホワイト */
-    --primary: #522b80;             /* ディープパープル / インディゴ */
-    --primary-dark: #351759;        /* 濃い紫 */
-    --accent-blue: #00875a;         /* エメラルドグリーン（精算ボタン） */
-    --accent-blue-dark: #005c3d;
-    --accent-purple: #e06d20;       /* エスニックオレンジ（ブースト用） */
-    --text-main: #271a38;           /* ナイトパープル */
-    --text-muted: #7b6d8c;          /* ミスティパープル */
-    --border-color: #d5c3e5;        /* 淡いラベンダー */
-    --radius: 20px;
-  }
+    :root {
+      /* ★ここで色を変更すると全体に一括反映されます★ */
+      --bg-color: #f3f0f7;            /* ライトパープルグレー */
+      --card-bg: #ffffff;             /* カード背景 */
+      --primary: #522b80;             /* メインカラー */
+      --primary-dark: #351759;        /* 濃い紫（強調テキストなど） */
+      --accent-blue: #00875a;         /* 精算ボタン（緑系） */
+      --accent-blue-dark: #005c3d;
+      --accent-purple: #e06d20;       /* ブーストボタン・アクセント（オレンジ系） */
+      --text-main: #271a38;           /* メイン文字色 */
+      --text-muted: #7b6d8c;          /* 補足文字色 */
+      --border-color: #d5c3e5;        /* 枠線カラー */
+      --calc-bg: #f5eeeb;             /* 電卓エリア背景 */
+      --radius: 20px;
+    }
 
     * {
       box-sizing: border-box;
@@ -70,9 +72,9 @@
       width: 100%;
       aspect-ratio: 3.4 / 1;
       background-color: #ffffff;
-      border: 2px solid #eab308;
+      border: 2px solid var(--border-color);
       border-radius: 18px;
-      box-shadow: 0 4px 12px rgba(217, 119, 6, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,14 +95,14 @@
       background: var(--card-bg);
       border-radius: var(--radius);
       padding: 18px;
-      box-shadow: 0 2px 8px rgba(69, 52, 42, 0.04);
-      border: 2px solid #f59e0b;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 2px solid var(--border-color);
     }
 
     /* コンパクトカード（仕分けセクション） */
     .card-compact {
-      background: #f0fdfa;
-      border: 2px solid #ccfbf1;
+      background: #eff6ff;
+      border: 2px solid #bfdbfe;
       border-radius: 14px;
       padding: 10px 16px;
       display: flex;
@@ -131,7 +133,7 @@
     .big-number {
       font-size: 1.7rem;
       font-weight: 800;
-      color: var(--primary-dark);
+      color: var(--primary);
     }
 
     .unit {
@@ -148,7 +150,7 @@
       padding-top: 6px;
       font-size: 0.75rem;
       color: var(--text-muted);
-      border-top: 1px dashed #fcd34d;
+      border-top: 1px dashed var(--border-color);
     }
 
     .sub-stat-val {
@@ -160,15 +162,15 @@
     /* メイン電卓入力エリア */
     .calc-area {
       margin-top: 10px;
-      background: #fef3c7;
-      border: 1px solid #fde68a;
+      background: var(--calc-bg);
+      border: 1px solid var(--border-color);
       border-radius: 16px;
       padding: 12px;
     }
 
     .calc-display {
       background: #ffffff;
-      border: 1px solid #fcd34d;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       padding: 8px 12px;
       text-align: right;
@@ -187,7 +189,7 @@
     .calc-btn {
       padding: 10px 0;
       background: #ffffff;
-      border: 1px solid #fcd34d;
+      border: 1px solid var(--border-color);
       border-radius: 8px;
       font-size: 0.95rem;
       font-weight: 800;
@@ -196,15 +198,15 @@
     }
 
     .calc-btn:active { transform: scale(0.95); }
-    .calc-btn.op { background: #fef3c7; color: var(--primary-dark); }
+    .calc-btn.op { background: #ffffff; color: var(--primary); }
     .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
     .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
     
     /* ブーストボタン */
     .calc-btn.boost {
-      background: #ccfbf1;
-      color: var(--accent-purple);
-      border: 1.5px solid #5eead4;
+      background: var(--accent-purple);
+      color: white;
+      border: none;
       font-size: 0.8rem;
     }
 
@@ -225,7 +227,7 @@
       font-size: 0.85rem;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(101, 163, 13, 0.4);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       transition: transform 0.1s, background 0.2s;
     }
 
@@ -238,7 +240,7 @@
     .form-select, .form-input {
       padding: 6px 8px;
       border-radius: 8px;
-      border: 1px solid #fcd34d;
+      border: 1px solid var(--border-color);
       font-size: 0.85rem;
       background: white;
       color: var(--text-main);
@@ -260,16 +262,16 @@
     .task-input-container input {
       flex: 1;
       padding: 8px 10px;
-      border: 1px solid #fcd34d;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 0.85rem;
       outline: none;
-      background: #fffbeeb3;
+      background: #ffffff;
     }
 
     .task-input-container select {
       padding: 6px 8px;
-      border: 1px solid #fcd34d;
+      border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 0.8rem;
       background: white;
@@ -300,7 +302,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 8px 10px;
-      background: #fef3c7;
+      background: var(--calc-bg);
       border-radius: 10px;
       font-size: 0.85rem;
     }
@@ -325,14 +327,14 @@
       white-space: nowrap;
     }
 
-    .badge-buy { background: #ccfbf1; color: #0f766e; }
+    .badge-buy { background: #e0f2fe; color: #0369a1; }
     .badge-todo { background: #ffedd5; color: #c2410c; }
 
     /* ポップアップ（モーダル）スタイル */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(69, 52, 42, 0.5);
+      background: rgba(0, 0, 0, 0.4);
       display: none;
       justify-content: center;
       align-items: center;
@@ -341,7 +343,7 @@
     }
 
     .modal-content {
-      background: #fffdfa;
+      background: #ffffff;
       border-radius: 18px;
       padding: 20px;
       width: 100%;
@@ -423,7 +425,7 @@
           </div>
         </div>
 
-        <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 8px; padding: 6px 10px; background: #fde68a; border-radius: 8px;">
+        <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 8px; padding: 6px 10px; background: var(--border-color); border-radius: 8px;">
           <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary-dark);">本日精算完了！</span>
           <button onclick="unsettle()" style="font-size: 0.75rem; background: none; border: none; color: #b91c1c; font-weight: 700; cursor: pointer; text-decoration: underline;">精算を取り消す</button>
         </div>
@@ -484,7 +486,7 @@
           <input type="number" id="inputBigExpense" class="form-input form-input-number" oninput="updateSettings()">
         </div>
         <div style="display: flex; justify-content: flex-end;">
-          <input type="text" id="inputBigExpenseMemo" class="form-input" placeholder="用途メモ（例: チケット代）" oninput="updateSettings()" style="width: 100%; font-size: 0.8rem; background: #fffbeeb3;">
+          <input type="text" id="inputBigExpenseMemo" class="form-input" placeholder="用途メモ（例: チケット代）" oninput="updateSettings()" style="width: 100%; font-size: 0.8rem;">
         </div>
       </div>
 
@@ -499,7 +501,7 @@
     <!-- 4. 期間終了後の余剰金仕分けエリア -->
     
     <!-- (1) 全体精算後の残り -->
-    <div class="card-compact" style="background: #eff6ff; border-color: #bfdbfe;">
+    <div class="card-compact">
       <div style="font-size: 0.8rem; font-weight: 700; color: #1e40af;">全体精算後の残り (余剰金)</div>
       <div>
         <span id="finalSurplus" style="font-size: 1.2rem; font-weight: 800; color: #1e40af;">0</span>
@@ -508,7 +510,7 @@
     </div>
 
     <!-- (2) 来月のご偏愛ブーストにまわす（入力可能） -->
-    <div class="card-compact">
+    <div class="card-compact" style="background: #f0fdfa; border-color: #ccfbf1;">
       <div style="font-size: 0.8rem; font-weight: 700; color: #0f766e;">来月のご偏愛ブーストにまわす</div>
       <div style="display: flex; align-items: center; gap: 4px;">
         <input type="number" id="inputRewardFrame" class="form-input form-input-number" oninput="updateRewardAndPiggy()" style="width: 90px; color: #0f766e; font-weight: 800; border-color: #5eead4;">
@@ -530,12 +532,12 @@
   <!-- ブースト用ポップアップモーダル -->
   <div id="boostModal" class="modal-overlay">
     <div class="modal-content">
-      <h3 style="font-size: 1.05rem; color: #0f766e; margin-bottom: 8px;">🚀 ご偏愛ブースト発動</h3>
+      <h3 style="font-size: 1.05rem; color: var(--accent-purple); margin-bottom: 8px;">🚀 ご偏愛ブースト発動</h3>
       <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">先月から繰り越されたブースト枠から本日の予算へチャージします。</div>
       
-      <div style="background: #f0fdfa; border: 1px solid #5eead4; border-radius: 10px; padding: 10px; margin-bottom: 12px;">
-        <div style="font-size: 0.75rem; color: #0f766e; font-weight: 700;">現在のブースト残高</div>
-        <div style="font-size: 1.4rem; font-weight: 800; color: #0f766e;"><span id="modalBoostBalance">0</span> 円</div>
+      <div style="background: var(--calc-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 12px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">現在のブースト残高</div>
+        <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-purple);"><span id="modalBoostBalance">0</span> 円</div>
       </div>
 
       <div style="margin-bottom: 16px;">
@@ -544,7 +546,7 @@
       </div>
 
       <div style="display: flex; gap: 8px;">
-        <button onclick="closeBoostModal()" style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #fcd34d; background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;">キャンセル</button>
+        <button onclick="closeBoostModal()" style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;">キャンセル</button>
         <button onclick="applyBoost()" style="flex: 1.5; padding: 10px; border-radius: 10px; border: none; background: var(--accent-purple); color: white; font-weight: 800; font-size: 0.85rem; cursor: pointer;">本日の予算に追加</button>
       </div>
     </div>
