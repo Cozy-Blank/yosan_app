@@ -25,7 +25,8 @@
       --card-bg: #ffffff;
       --primary: #f472b6;             /* メインピンク */
       --primary-dark: #db2777;
-      --accent: #10b981;
+      --accent-blue: #38bdf8;         /* 水色（精算ボタン用） */
+      --accent-blue-dark: #0284c7;
       --text-main: #4a4049;           /* 優しいダークブラウン */
       --text-muted: #9d8b98;
       --border-color: #fbcfe8;
@@ -58,7 +59,7 @@
       gap: 14px;
     }
 
-    /* 長方形イラスト枠（外枠・背景） */
+    /* 長方形イラスト枠 */
     .header-banner-wrapper {
       width: 100%;
       margin-bottom: 2px;
@@ -95,7 +96,7 @@
       border: 2px solid #f472b6;
     }
 
-    /* 縦幅半分のコンパクトカード（一番下段用） */
+    /* コンパクトカード（一番下段） */
     .card-compact {
       background: #faf5ff;
       border: 2px solid #f3e8ff;
@@ -142,19 +143,91 @@
       text-align: center;
     }
 
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 14px;
-      font-size: 0.95rem;
+    /* メイン電卓入力エリア */
+    .calc-area {
+      margin-top: 14px;
+      background: #fff0f6;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .calc-display {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      text-align: right;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .calc-btn {
+      padding: 10px 0;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 1rem;
       font-weight: 800;
       cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .calc-btn:active { transform: scale(0.95); }
+    .calc-btn.op { background: #fce7f3; color: var(--primary-dark); }
+    .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
+    .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+    .settle-action-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border-color);
+    }
+
+    .btn-settle-blue {
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(56, 189, 248, 0.4);
       transition: transform 0.1s, background 0.2s;
     }
 
-    .btn:active { transform: scale(0.98); }
-    .btn-primary { background: var(--primary); color: white; }
+    .btn-settle-blue:active {
+      transform: scale(0.95);
+      background: var(--accent-blue-dark);
+    }
+
+    /* フォーム共通スタイル */
+    .form-select, .form-input {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      background: white;
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .form-input-number {
+      text-align: right;
+      width: 110px;
+    }
 
     /* タスクメモ・買い物リスト */
     .task-input-container {
@@ -233,67 +306,6 @@
 
     .badge-buy { background: #d1fae5; color: #065f46; }
     .badge-todo { background: #fef3c7; color: #92400e; }
-
-    /* 電卓風モーダル */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 100;
-    }
-
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-
-    .modal-content {
-      width: 100%;
-      max-width: 480px;
-      background: white;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      padding: 20px;
-      transform: translateY(100%);
-      transition: transform 0.25s ease;
-    }
-
-    .modal-overlay.active .modal-content { transform: translateY(0); }
-
-    .calc-display {
-      background: #fff0f6;
-      border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      text-align: right;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin-bottom: 12px;
-    }
-
-    .calc-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-
-    .calc-btn {
-      padding: 14px;
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .calc-btn.op { background: #fce7f3; color: var(--primary-dark); }
-    .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
-    .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
   </style>
 </head>
 <body>
@@ -309,7 +321,7 @@
     <!-- 1. 本日の使える予算カード -->
     <div class="card">
       <div class="card-title">
-        <span>本日の使える予算 (買い物1回分)</span>
+        <span>本日の使える予算</span>
         <span style="color: var(--primary-dark); font-size: 0.75rem;">自動計算中</span>
       </div>
       <div id="periodRangeText" style="text-align: center; color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; margin-bottom: 8px;">
@@ -329,16 +341,51 @@
           <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingBudget">0</span> 円</div>
         </div>
       </div>
-      <button id="settleTriggerBtn" class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="openCalcModal()">
-        本日の買い物を上乗せ・精算
-      </button>
-      <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 12px; padding: 10px; background: #fce7f3; border-radius: 12px;">
-        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">本日精算済み (利用: <span id="settledTodaySum">0</span>円)</span>
-        <button onclick="unsettle()" style="font-size: 0.75rem; background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">取消</button>
+
+      <!-- メイン配置の電卓＆加算エリア -->
+      <div class="calc-area">
+        <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">本日の買い物・利用額を入力</div>
+        <div id="calcDisplay" class="calc-display">0</div>
+        
+        <div class="calc-grid">
+          <button class="calc-btn clear" onclick="calcInput('C')">C</button>
+          <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+          <button class="calc-btn op" onclick="calcInput('*')">×</button>
+          <button class="calc-btn op" onclick="calcInput('-')">-</button>
+          
+          <button class="calc-btn" onclick="calcInput('7')">7</button>
+          <button class="calc-btn" onclick="calcInput('8')">8</button>
+          <button class="calc-btn" onclick="calcInput('9')">9</button>
+          <button class="calc-btn op" onclick="calcInput('+')">+</button>
+          
+          <button class="calc-btn" onclick="calcInput('4')">4</button>
+          <button class="calc-btn" onclick="calcInput('5')">5</button>
+          <button class="calc-btn" onclick="calcInput('6')">6</button>
+          <button class="calc-btn add" onclick="addExpense()">＋ 加算</button>
+          
+          <button class="calc-btn" onclick="calcInput('1')">1</button>
+          <button class="calc-btn" onclick="calcInput('2')">2</button>
+          <button class="calc-btn" onclick="calcInput('3')">3</button>
+          <button class="calc-btn" onclick="calcInput('0')">0</button>
+        </div>
+
+        <div class="settle-action-row">
+          <div style="font-size: 0.85rem; font-weight: 800; color: var(--primary-dark);">
+            本日累計: <span id="todaySpentSum">0</span> 円
+          </div>
+          <div id="settleActionBox">
+            <button class="btn-settle-blue" onclick="confirmDailySettle()">精算する</button>
+          </div>
+        </div>
+
+        <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 8px; padding: 6px 10px; background: #fce7f3; border-radius: 8px;">
+          <span style="font-size: 0.8rem; font-weight: 700; color: var(--primary-dark);">本日精算完了！</span>
+          <button onclick="unsettle()" style="font-size: 0.75rem; background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer; text-decoration: underline;">精算を取り消す</button>
+        </div>
       </div>
     </div>
 
-    <!-- 2. 買い物予定・ToDoリストカード（予算カードの直下に配置） -->
+    <!-- 2. 買い物予定・ToDoリストカード -->
     <div class="card">
       <div class="card-title">🛒 買い物予定・ToDoリスト</div>
       <div class="task-input-container">
@@ -359,7 +406,7 @@
       <!-- 集計の範囲 -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 0.85rem; font-weight: 700;">集計の範囲</span>
-        <select id="periodType" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid var(--border-color);">
+        <select id="periodType" class="form-select" onchange="updateSettings()">
           <option value="monthly">1日〜月末締め</option>
           <option value="customNext">締日指定（例:25日〜）</option>
           <option value="customRange">日付を自由に指定</option>
@@ -368,79 +415,50 @@
 
       <!-- 自由日付指定 -->
       <div id="customRangeRow" style="display: none; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-        <input type="date" id="startDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+        <input type="date" id="startDate" class="form-input" onchange="updateSettings()" style="width: 45%;">
         〜
-        <input type="date" id="endDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+        <input type="date" id="endDate" class="form-input" onchange="updateSettings()" style="width: 45%;">
       </div>
 
       <!-- 締め日指定 -->
       <div id="startDayRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 0.85rem; font-weight: 700;">開始日（毎月）</span>
-        <input type="number" id="startDay" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 80px;">
+        <input type="number" id="startDay" class="form-input form-input-number" oninput="updateSettings()" style="width: 80px;">
       </div>
 
       <!-- 手元管理費 -->
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 0.85rem; font-weight: 700;">手元管理費</span>
-        <input type="number" id="inputTotal" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+        <input type="number" id="inputTotal" class="form-input form-input-number" oninput="updateSettings()">
       </div>
 
-      <!-- 大型出費 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
-        <input type="number" id="inputBigExpense" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      <!-- 大型出費（金額＋用途メモ） -->
+      <div style="margin-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+          <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
+          <input type="number" id="inputBigExpense" class="form-input form-input-number" oninput="updateSettings()">
+        </div>
+        <div style="display: flex; justify-content: flex-end;">
+          <input type="text" id="inputBigExpenseMemo" class="form-input" placeholder="用途メモ（例: チケット代）" oninput="updateSettings()" style="width: 100%; font-size: 0.8rem; background: #fff0f6;">
+        </div>
       </div>
 
-      <!-- 設定日数 -->
+      <!-- 設定日数（プルダウン化） -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <span style="font-size: 0.85rem; font-weight: 700;">設定日数</span>
-        <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+        <select id="inputDays" class="form-select" onchange="updateSettings()" style="width: 110px; text-align: right;">
+          <!-- JSで1〜31日を自動追加 -->
+        </select>
       </div>
     </div>
 
-    <!-- 4. 来月のご偏愛ブーストにまわす（一番下段に移動＆サイズ半分に変更） -->
+    <!-- 4. 来月のご偏愛ブーストにまわす（一番下段・スリム） -->
     <div class="card-compact">
       <div style="font-size: 0.8rem; font-weight: 700; color: #7e22ce;">来月のご偏愛ブーストにまわす</div>
       <div>
         <span id="rewardAmount" style="font-size: 1.2rem; font-weight: 800; color: #7e22ce;">0</span>
         <span style="font-size: 0.85rem; font-weight: 700; color: #7e22ce; margin-left: 2px;">円</span>
       </div>
-    </div>
-  </div>
-
-  <!-- 電卓モーダル -->
-  <div id="calcModal" class="modal-overlay">
-    <div class="modal-content">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span style="font-size: 0.9rem; font-weight: 700;">本日利用分を入力</span>
-        <button onclick="closeCalcModal()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer;">✕</button>
-      </div>
-      <div id="calcDisplay" class="calc-display">0</div>
-      <div class="calc-grid">
-        <button class="calc-btn clear" onclick="calcInput('C')">C</button>
-        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
-        <button class="calc-btn op" onclick="calcInput('*')">×</button>
-        <button class="calc-btn op" onclick="calcInput('-')">-</button>
-        
-        <button class="calc-btn" onclick="calcInput('7')">7</button>
-        <button class="calc-btn" onclick="calcInput('8')">8</button>
-        <button class="calc-btn" onclick="calcInput('9')">9</button>
-        <button class="calc-btn op" onclick="calcInput('+')">+</button>
-        
-        <button class="calc-btn" onclick="calcInput('4')">4</button>
-        <button class="calc-btn" onclick="calcInput('5')">5</button>
-        <button class="calc-btn" onclick="calcInput('6')">6</button>
-        <button class="calc-btn add" onclick="addExpense()">加算</button>
-        
-        <button class="calc-btn" onclick="calcInput('1')">1</button>
-        <button class="calc-btn" onclick="calcInput('2')">2</button>
-        <button class="calc-btn" onclick="calcInput('3')">3</button>
-        <button class="calc-btn" onclick="calcInput('0')">0</button>
-      </div>
-      <div style="margin-top: 10px; text-align: right; font-size: 0.85rem; font-weight: 700;">
-        本日累計: <span id="calcTodayTotal">0</span> 円
-      </div>
-      <button class="btn btn-primary" style="margin-top: 12px;" onclick="confirmDailySettle()">精算を確定する</button>
     </div>
   </div>
 
@@ -455,6 +473,7 @@
       endDate: '',
       totalBudget: 80000,
       bigExpense: 10000,
+      bigExpenseMemo: '',
       settingDays: 10,
       remainingDays: 10,
       remainingBudget: 70000,
@@ -469,6 +488,17 @@
     function saveState() {
       localStorage.setItem('nmd_app_state_v4', JSON.stringify(state));
       render();
+    }
+
+    function initDaysDropdown() {
+      const select = document.getElementById('inputDays');
+      if (!select || select.options.length > 0) return;
+      for (let i = 1; i <= 31; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `${i} 日`;
+        select.appendChild(opt);
+      }
     }
 
     function getPeriodRange() {
@@ -501,6 +531,8 @@
     }
 
     function render() {
+      initDaysDropdown();
+
       // 設定エリアの初期反映
       if (document.getElementById('periodType')) document.getElementById('periodType').value = state.periodType;
       if (document.getElementById('startDay')) document.getElementById('startDay').value = state.startDay;
@@ -508,6 +540,7 @@
       if (document.getElementById('endDate')) document.getElementById('endDate').value = state.endDate || '';
       if (document.getElementById('inputTotal')) document.getElementById('inputTotal').value = state.totalBudget;
       if (document.getElementById('inputBigExpense')) document.getElementById('inputBigExpense').value = state.bigExpense;
+      if (document.getElementById('inputBigExpenseMemo')) document.getElementById('inputBigExpenseMemo').value = state.bigExpenseMemo || '';
       if (document.getElementById('inputDays')) document.getElementById('inputDays').value = state.settingDays;
 
       // 表示切替
@@ -527,23 +560,22 @@
 
       if (document.getElementById('remainingDays')) document.getElementById('remainingDays').innerText = state.remainingDays;
       if (document.getElementById('remainingBudget')) document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
+      if (document.getElementById('todaySpentSum')) document.getElementById('todaySpentSum').innerText = state.todaySpentTotal.toLocaleString();
 
       const todayBudget = state.remainingDays > 0 ? Math.floor(state.remainingBudget / state.remainingDays) : 0;
       if (document.getElementById('todayBudget')) document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
       if (document.getElementById('rewardAmount')) document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
 
-      // 精算状態の制御
-      if (document.getElementById('settleTriggerBtn') && document.getElementById('settledBadge')) {
-        if (state.isSettledToday) {
-          document.getElementById('settleTriggerBtn').style.display = 'none';
-          document.getElementById('settledBadge').style.display = 'flex';
-          if (document.getElementById('settledTodaySum')) {
-            document.getElementById('settledTodaySum').innerText = state.todaySpentTotal.toLocaleString();
-          }
-        } else {
-          document.getElementById('settleTriggerBtn').style.display = 'block';
-          document.getElementById('settledBadge').style.display = 'none';
-        }
+      // 精算ボタン状態の表示制御
+      const settleActionBox = document.getElementById('settleActionBox');
+      const settledBadge = document.getElementById('settledBadge');
+
+      if (state.isSettledToday) {
+        if (settleActionBox) settleActionBox.style.display = 'none';
+        if (settledBadge) settledBadge.style.display = 'flex';
+      } else {
+        if (settleActionBox) settleActionBox.style.display = 'block';
+        if (settledBadge) settledBadge.style.display = 'none';
       }
 
       // タスク・買い物リスト表示
@@ -581,6 +613,7 @@
       state.endDate = document.getElementById('endDate')?.value || '';
       state.totalBudget = Number(document.getElementById('inputTotal')?.value) || 0;
       state.bigExpense = Number(document.getElementById('inputBigExpense')?.value) || 0;
+      state.bigExpenseMemo = document.getElementById('inputBigExpenseMemo')?.value || '';
       
       const newSettingDays = Math.max(1, Number(document.getElementById('inputDays')?.value) || 1);
 
@@ -597,18 +630,7 @@
       render();
     });
 
-    /* 電卓・精算・タスク用処理 */
-    function openCalcModal() {
-      calcExpr = '0';
-      updateCalcDisplay();
-      if (document.getElementById('calcTodayTotal')) {
-        document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
-      }
-      document.getElementById('calcModal')?.classList.add('active');
-    }
-
-    function closeCalcModal() { document.getElementById('calcModal')?.classList.remove('active'); }
-
+    /* 電卓・入力処理 */
     function calcInput(val) {
       if (val === 'C') { calcExpr = '0'; } 
       else {
@@ -624,6 +646,7 @@
       }
     }
 
+    /* 加算（一時保存） */
     function addExpense() {
       try {
         let val = eval(calcExpr.replace(/×/g, '*').replace(/÷/g, '/'));
@@ -635,9 +658,6 @@
           state.remainingBudget -= val;
           calcExpr = '0';
           updateCalcDisplay();
-          if (document.getElementById('calcTodayTotal')) {
-            document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
-          }
           saveState();
         }
       } catch (e) {
@@ -645,16 +665,19 @@
       }
     }
 
+    /* 精算確定 */
     function confirmDailySettle() {
-      addExpense();
+      if (calcExpr !== '0') {
+        addExpense();
+      }
       if (!state.isSettledToday) {
         state.isSettledToday = true;
         state.remainingDays = Math.max(0, state.remainingDays - 1);
       }
-      closeCalcModal();
       saveState();
     }
 
+    /* 精算取り消し */
     function unsettle() {
       if (confirm('本日の精算を取り消しますか？')) {
         state.remainingBudget += state.todaySpentTotal;
@@ -665,6 +688,7 @@
       }
     }
 
+    /* タスク操作 */
     function addTask() {
       const textEl = document.getElementById('taskText');
       const text = textEl.value.trim();
