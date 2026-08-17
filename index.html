@@ -2,602 +2,759 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>偏愛Tool - X(Twitter) リンク保存 & 本日予算</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <title>偏愛Tool｜日割りメリハリ</title>
+  
+  <!-- OGP設定（LINE・SNSシェア用） -->
+  <meta property="og:title" content="偏愛Tool｜日割りメリハリ">
+  <meta property="og:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
+  <meta property="og:site_name" content="https://i.ibb.co/pjGSsHNm/teiku.png"偏愛Tool">
+  <meta property="og:image" content="">
+  <meta property="og:type" content="website">
+  
+  <!-- Twitter (X) 用カード設定 -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="偏愛Tool｜日割りメリハリ">
+  <meta name="twitter:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
+  <meta name="twitter:image" content="https://i.ibb.co/pjGSsHNm/teiku.png">
+
   <style>
     :root {
-      --primary: #1d9bf0; /* X(Twitter) Blue */
-      --primary-hover: #1a8cd8;
-      --bg: #f7f9fa;
+      --bg-color: #fff5f7;            /* やわらかいピンク系背景 */
       --card-bg: #ffffff;
-      --text: #0f1419;
-      --text-muted: #536471;
-      --border: #eff3f4;
-      
-      --art-color: #ec4899;
-      --art-bg: #fce7f3;
-      
-      --item-color: #10b981;
-      --item-bg: #d1fae5;
-      
-      --info-color: #f59e0b;
-      --info-bg: #fef3c7;
-
-      --gourmet-color: #ef4444;
-      --gourmet-bg: #fee2e2;
-
-      --other-color: #6b7280;
-      --other-bg: #f3f4f6;
+      --primary: #f472b6;             /* メインピンク */
+      --primary-dark: #db2777;
+      --accent: #10b981;
+      --text-main: #4a4049;           /* 優しいダークブラウン */
+      --text-muted: #9d8b98;
+      --border-color: #fbcfe8;
+      --radius: 20px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: "Hiragino Maru Gothic ProN", "BIZ UDPGothic", "Yu Gothic UI", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 12px;
       padding-bottom: 40px;
     }
 
-    /* ヘッダー */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* 長方形イラスト枠（背景白） */
+    .header-banner-wrapper {
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    /* 修正後 */
+/* 長方形イラスト枠（外枠・背景） */
+
+/* 長方形イラスト枠（外枠・背景） */
+.header-banner {
+    width: 100%;
+    aspect-ratio: 4.5 / 1;               /* ★縦幅をスリム（補足）にして枠の圧迫感を減らします */
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;                     /* 枠からはみ出ないように固定 */
+    box-sizing: border-box;
+}
+
+/* ヘッダー画像本体 */
+.header-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;                   /* ★contain から cover に変更！枠全体に大きく表示させます */
+    object-position: center;              /* 画像の中心を基準に配置 */
+    pointer-events: none;                /* タップ変更ロック */
+    box-sizing: border-box;
+}
+
+
+    .header-placeholder {
+      color: var(--primary-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
       text-align: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      padding: 10px;
     }
 
-    header h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 12px 12px 0 12px;
-    }
-
-    /* 共通カードスタイル */
-    .form-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      margin-bottom: 14px;
-      border: 1px solid var(--border);
-    }
-
+ 
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px;
+  /* ★影を削除して枠線を少し太く */
+  box-shadow: none;
+  border: 2px solid #f472b6; /* くっきりしたピンクの線（お好みの色に調整可） */
+}
     .card-title {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 700;
+      color: var(--text-muted);
       margin-bottom: 10px;
-      color: var(--text);
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
     }
 
-    /* 本日使える予算エリア */
-    .budget-display {
+    .big-number {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .unit {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-left: 2px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .stat-box {
+      background: #fff0f6;
+      border-radius: 14px;
+      padding: 10px;
       text-align: center;
-      background: linear-gradient(135deg, #1d9bf0 0%, #0284c7 100%);
-      color: #fff;
-      padding: 14px;
+    }
+
+    .stat-box .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .stat-box .value {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .period-range-box {
+      background: #fff0f6;
       border-radius: 12px;
-      margin-bottom: 12px;
+      padding: 8px 12px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 10px;
     }
 
-    .budget-amount {
-      font-size: 2rem;
-      font-weight: 900;
-      line-height: 1.2;
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
     }
 
-    .budget-inputs {
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-accent { background: #10b981; color: white; }
+    .btn-secondary { background: #f1f5f9; color: #475569; }
+
+    .settled-badge {
+      background: #fce7f3;
+      color: var(--primary-dark);
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 10px;
       display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .budget-inputs input {
-      flex: 1;
+    .unsettle-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      text-decoration: underline;
+      font-size: 0.75rem;
+      cursor: pointer;
     }
 
-    /* ToDo / 買い物リスト */
-    .todo-input-group {
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .input-row label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .input-row input, .input-row select {
+      width: 140px;
+      padding: 8px 10px;
+      border: 1px solid var(--border-color);
+      background: #fff0f6;
+      border-radius: 10px;
+      text-align: right;
+      font-size: 0.85rem;
+      font-weight: 800;
+      outline: none;
+      color: var(--text-main);
+    }
+
+    /* タスクメモ */
+    .task-input-container {
       display: flex;
       gap: 6px;
       margin-bottom: 10px;
     }
 
-    .todo-list {
+    .task-input-container input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.85rem;
+      outline: none;
+      background: #fff0f6;
+    }
+
+    .task-input-container select {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 0.8rem;
+      background: white;
+      font-weight: 700;
+    }
+
+    .btn-small {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+    }
+
+    .task-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-    }
-
-    .todo-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f8fafc;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      border: 1px solid var(--border);
-    }
-
-    .todo-item.completed span {
-      text-decoration: line-through;
-      color: var(--text-muted);
-      opacity: 0.6;
-    }
-
-    .todo-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .todo-item input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .delete-todo-btn {
-      background: none;
-      border: none;
-      color: #ef4444;
-      font-weight: bold;
-      cursor: pointer;
-      padding: 0 4px;
-    }
-
-    /* 分類ボタン */
-    .type-selector-wrapper {
-      overflow-x: auto;
-      margin-bottom: 12px;
-      padding-bottom: 4px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .type-selector-wrapper::-webkit-scrollbar {
-      display: none;
-    }
-
-    .type-selector {
-      display: flex;
       gap: 6px;
-      width: max-content;
-    }
-
-    .type-btn {
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: #fff;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      transition: all 0.2s;
-    }
-
-    .type-btn.active[data-type="art"] { background: var(--art-bg); color: var(--art-color); border-color: var(--art-color); }
-    .type-btn.active[data-type="item"] { background: var(--item-bg); color: var(--item-color); border-color: var(--item-color); }
-    .type-btn.active[data-type="info"] { background: var(--info-bg); color: var(--info-color); border-color: var(--info-color); }
-    .type-btn.active[data-type="gourmet"] { background: var(--gourmet-bg); color: var(--gourmet-color); border-color: var(--gourmet-color); }
-    .type-btn.active[data-type="other"] { background: var(--other-bg); color: var(--other-color); border-color: var(--other-color); }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
-
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.9rem;
-      outline: none;
-      background: #f8fafc;
-    }
-
-    input[type="text"]:focus, input[type="number"]:focus {
-      border-color: var(--primary);
-      background: #fff;
-    }
-
-    .add-btn {
-      width: 100%;
-      padding: 10px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .add-btn:active {
-      background: var(--primary-hover);
-    }
-
-    /* フィルタータブ */
-    .tabs-wrapper {
-      overflow-x: auto;
-      margin-bottom: 12px;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .tabs-wrapper::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      width: max-content;
-      padding-bottom: 4px;
-    }
-
-    .tab {
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      white-space: nowrap;
-    }
-
-    .tab.active {
-      color: #fff;
-      background: var(--primary);
-      border-color: var(--primary);
-    }
-
-    /* リストカード */
-    .task-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
     .task-item {
-      background: var(--card-bg);
-      border-radius: 14px;
-      padding: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .task-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    .badge {
-      font-size: 0.7rem;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-weight: 700;
-    }
-
-    .badge-art { background: var(--art-bg); color: var(--art-color); }
-    .badge-item { background: var(--item-bg); color: var(--item-color); }
-    .badge-info { background: var(--info-bg); color: var(--info-color); }
-    .badge-gourmet { background: var(--gourmet-bg); color: var(--gourmet-color); }
-    .badge-other { background: var(--other-bg); color: var(--other-color); }
-
-    .task-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .link-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--primary);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      background: #f0f9ff;
       padding: 8px 12px;
-      border-radius: 8px;
-      word-break: break-all;
-      width: fit-content;
+      background: #fff0f6;
+      border-radius: 10px;
     }
 
-    .delete-btn {
-      background: none;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
+    .task-item.completed {
+      opacity: 0.4;
+      text-decoration: line-through;
+    }
+
+    .task-badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 800;
+      margin-right: 6px;
+    }
+
+    .badge-outing { background: #dbeafe; color: #1e40af; }
+    .badge-payment { background: #fef3c7; color: #92400e; }
+
+    /* 電卓風モーダル */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 100;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .modal-content {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 20px;
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+
+    .calc-display {
+      background: #fff0f6;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px;
+      text-align: right;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .calc-btn {
+      padding: 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
       font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 30px 0;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+    .calc-btn.op { background: #fce7f3; color: var(--primary-dark); }
+    .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
+    .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
+    .badge-frame {
+      background: #f3e8ff;
+      color: #6b21a8;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>🖤 偏愛Tool - リンクストック & ダッシュボード</h1>
-</header>
-
-<div class="container">
-
-  <!-- ① 今日使えるお金のカラム -->
-  <div class="form-card">
-    <div class="card-title">💰 本日使えるお金</div>
-    <div class="budget-display">
-      <div style="font-size: 0.8rem; opacity: 0.9;">本日の目安予算</div>
-      <div class="budget-amount" id="dailyBudgetDisplay">¥0</div>
-    </div>
-    <div class="budget-inputs">
-      <input type="number" id="totalBudgetInput" placeholder="残金 (例: 30000)" oninput="updateBudget()">
-      <input type="number" id="daysLeftInput" placeholder="残日数 (例: 10)" oninput="updateBudget()">
-    </div>
-
-    <!-- ② 買い物予定リスト・ToDoリスト（直下に配置） -->
-    <div class="card-title" style="margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 12px;">
-      🛒 買い物予定・ToDoリスト
-    </div>
-    <div class="todo-input-group">
-      <input type="text" id="newTodoInput" placeholder="買うものややることを入力...">
-      <button class="add-btn" style="width: 70px;" onclick="addTodo()">追加</button>
-    </div>
-    <ul class="todo-list" id="todoList"></ul>
-  </div>
-
-  <!-- ③ Xリンク追加フォーム -->
-  <div class="form-card">
-    <div class="card-title">🔗 リンクストック追加</div>
-    <div class="type-selector-wrapper">
-      <div class="type-selector">
-        <button class="type-btn active" data-type="art" onclick="setType('art')">🎨 イラスト/作品</button>
-        <button class="type-btn" data-type="item" onclick="setType('item')">🛒 欲しいもの</button>
-        <button class="type-btn" data-type="info" onclick="setType('info')">📖 役立ち情報</button>
-        <button class="type-btn" data-type="gourmet" onclick="setType('gourmet')">🍱 グルメ</button>
-        <button class="type-btn" data-type="other" onclick="setType('other')">✨ その他</button>
+ <div class="app-container">
+    <!-- ヘッダーイラスト -->
+    <div class="header-banner-wrapper">
+      <div class="header-banner">
+        <img src="https://i.ibb.co/pjGSsHNm/teiku.png" alt="ヘッダー画像" class="header-img">
       </div>
     </div>
 
-    <div class="form-group">
-      <input type="text" id="urlInput" placeholder="X(ツイッター)のリンク(URL)を貼り付け...">
-    </div>
-
-    <div class="form-group">
-      <input type="text" id="memoInput" placeholder="メモ（例：好きな絵師さん、〇〇のレシピ）">
-    </div>
-
-    <button class="add-btn" onclick="addLink()">リンクを保存する</button>
-  </div>
-
-  <!-- フィルタータブ -->
-  <div class="tabs-wrapper">
-    <div class="tabs">
-      <div class="tab active" onclick="setFilter('all', this)">すべて</div>
-      <div class="tab" onclick="setFilter('art', this)">🎨 イラスト</div>
-      <div class="tab" onclick="setFilter('item', this)">🛒 欲しいもの</div>
-      <div class="tab" onclick="setFilter('info', this)">📖 情報</div>
-      <div class="tab" onclick="setFilter('gourmet', this)">🍱 グルメ</div>
-      <div class="tab" onclick="setFilter('other', this)">✨ その他</div>
-    </div>
-  </div>
-
-  <!-- リスト表示部 -->
-  <div id="linkList" class="task-list"></div>
-</div>
-
-<script>
-  let currentType = 'art';
-  let currentFilter = 'all';
-  let links = JSON.parse(localStorage.getItem('x_saved_links') || '[]');
-  let todos = JSON.parse(localStorage.getItem('tool_todos') || '[]');
-
-  const typeLabels = {
-    art: 'イラスト/作品',
-    item: '欲しいもの',
-    info: '役立ち情報',
-    gourmet: 'グルメ',
-    other: 'その他'
-  };
-
-  /* --- 予算計算機能 --- */
-  function updateBudget() {
-    const total = parseFloat(document.getElementById('totalBudgetInput').value) || 0;
-    const days = parseFloat(document.getElementById('daysLeftInput').value) || 1;
-    
-    localStorage.setItem('tool_budget_total', document.getElementById('totalBudgetInput').value);
-    localStorage.setItem('tool_budget_days', document.getElementById('daysLeftInput').value);
-
-    const daily = Math.floor(total / days);
-    document.getElementById('dailyBudgetDisplay').textContent = `¥${daily.toLocaleString()}`;
-  }
-
-  function loadBudget() {
-    const savedTotal = localStorage.getItem('tool_budget_total') || '';
-    const savedDays = localStorage.getItem('tool_budget_days') || '';
-    document.getElementById('totalBudgetInput').value = savedTotal;
-    document.getElementById('daysLeftInput').value = savedDays;
-    updateBudget();
-  }
-
-  /* --- ToDo / 買い物リスト機能 --- */
-  function addTodo() {
-    const input = document.getElementById('newTodoInput');
-    const text = input.value.trim();
-    if (!text) return;
-
-    todos.push({ id: Date.now(), text: text, completed: false });
-    input.value = '';
-    saveAndRenderTodos();
-  }
-
-  function toggleTodo(id) {
-    todos = todos.map(todo => {
-      if (todo.id === id) todo.completed = !todo.completed;
-      return todo;
-    });
-    saveAndRenderTodos();
-  }
-
-  function deleteTodo(id) {
-    todos = todos.filter(todo => todo.id !== id);
-    saveAndRenderTodos();
-  }
-
-  function saveAndRenderTodos() {
-    localStorage.setItem('tool_todos', JSON.stringify(todos));
-    renderTodos();
-  }
-
-  function renderTodos() {
-    const listEl = document.getElementById('todoList');
-    listEl.innerHTML = '';
-
-    if (todos.length === 0) {
-      listEl.innerHTML = '<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 6px 0;">メモ欄は空です</div>';
-      return;
-    }
-
-    todos.forEach(todo => {
-      const li = document.createElement('li');
-      li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-      li.innerHTML = `
-        <div class="todo-left">
-          <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
-          <span>${escapeHtml(todo.text)}</span>
+    <!-- 1. 本日の使える予算カード（復活！） -->
+    <div class="card">
+      <div class="card-title">
+        <span>本日の使える予算 (買い物1回分)</span>
+        <span style="color: var(--primary-dark); font-size: 0.75rem;">自動計算中</span>
+      </div>
+      <div id="periodRangeText" style="text-align: center; color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; margin-bottom: 8px;">
+        対象期間: ----/--/-- 〜 ----/--/--
+      </div>
+      <div style="text-align: center; margin: 10px 0;">
+        <span id="todayBudget" class="big-number">0</span>
+        <span class="unit">円</span>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残り「使う日」</div>
+          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingDays">0</span> 日</div>
         </div>
-        <button class="delete-todo-btn" onclick="deleteTodo(${todo.id})">✕</button>
-      `;
-      listEl.appendChild(li);
-    });
-  }
+        <div class="stat-box">
+          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残りの生活費</div>
+          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingBudget">0</span> 円</div>
+        </div>
+      </div>
+      <button id="settleTriggerBtn" class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="openCalcModal()">
+        本日の買い物を上乗せ・精算
+      </button>
+      <div id="settledBadge" style="display: none; align-items: center; justify-content: space-between; margin-top: 12px; padding: 10px; background: #fce7f3; border-radius: 12px;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark);">本日精算済み (利用: <span id="settledTodaySum">0</span>円)</span>
+        <button onclick="unsettle()" style="font-size: 0.75rem; background: none; border: none; color: #ef4444; font-weight: 700; cursor: pointer;">取消</button>
+      </div>
+    </div>
 
-  /* --- Xリンク保存機能 --- */
-  function setType(type) {
-    currentType = type;
-    document.querySelectorAll('.type-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.type === type);
-    });
-  }
+    <!-- 2. 今期の偏愛・ご褒美枠カード（復活！） -->
+    <div class="card" style="background: #faf5ff; border-color: #f3e8ff;">
+      <div class="card-title" style="color: #7e22ce;">今期の偏愛・ご褒美枠 (ブースト用)</div>
+      <div style="text-align: center; margin: 5px 0;">
+        <span id="rewardAmount" class="big-number" style="color: #7e22ce;">0</span>
+        <span class="unit" style="color: #7e22ce;">円</span>
+      </div>
+    </div>
 
-  function setFilter(filter, element) {
-    currentFilter = filter;
-    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-    element.classList.add('active');
-    renderLinks();
-  }
+    <!-- 3. 期間・予算の設定カード -->
+    <div class="card">
+      <div class="card-title">期間・予算の設定</div>
+      
+      <!-- 集計の範囲 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">集計の範囲</span>
+        <select id="periodType" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid var(--border-color);">
+          <option value="monthly">1日〜月末締め</option>
+          <option value="customNext">締日指定（例:25日〜）</option>
+          <option value="customRange">日付を自由に指定</option>
+        </select>
+      </div>
 
-  function addLink() {
-    const urlInput = document.getElementById('urlInput');
-    const memoInput = document.getElementById('memoInput');
-    const url = urlInput.value.trim();
-    const memo = memoInput.value.trim();
+      <!-- 自由日付指定 -->
+      <div id="customRangeRow" style="display: none; gap: 8px; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <input type="date" id="startDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+        〜
+        <input type="date" id="endDate" onchange="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; width: 45%;">
+      </div>
 
-    if (!url) {
-      alert('URLを入力してください');
-      return;
-    }
+      <!-- 締め日指定 -->
+      <div id="startDayRow" style="display: none; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">開始日（毎月）</span>
+        <input type="number" id="startDay" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 80px;">
+      </div>
 
-    const newLink = {
-      id: Date.now(),
-      url: url,
-      memo: memo || '無題のリンク',
-      type: currentType,
-      createdAt: new Date().toLocaleDateString('ja-JP')
+      <!-- 手元管理費 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">手元管理費</span>
+        <input type="number" id="inputTotal" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+
+      <!-- 大型出費 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.85rem; font-weight: 700;">大型出費 (事前除外)</span>
+        <input type="number" id="inputBigExpense" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+
+      <!-- 設定日数 -->
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem; font-weight: 700;">設定日数</span>
+        <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
+      </div>
+    </div>
+</div>
+  
+
+  <script>
+    const DEFAULT_HEADER = 'https://i.ibb.co/pjGSsHNm/teiku.png';
+
+    let state = JSON.parse(localStorage.getItem('nmd_app_state_v4') || 'null') || {
+      headerImg: DEFAULT_HEADER,
+      periodType: 'monthly', // 'monthly' | 'customNext' | 'customRange'
+      startDay: 25,
+      startDate: '',
+      endDate: '',
+      totalBudget: 80000,
+      bigExpense: 10000,
+      settingDays: 10,
+      remainingDays: 10,
+      remainingBudget: 70000,
+      todaySpentTotal: 0,
+      isSettledToday: false,
+      rewardFrame: 0,
+      tasks: []
     };
 
-    links.unshift(newLink);
-    saveAndRender();
+    let calcExpr = '0';
 
-    urlInput.value = '';
-    memoInput.value = '';
-  }
-
-  function deleteLink(id) {
-    links = links.filter(l => l.id !== id);
-    saveAndRender();
-  }
-
-  function saveAndRender() {
-    localStorage.setItem('x_saved_links', JSON.stringify(links));
-    renderLinks();
-  }
-
-  function renderLinks() {
-    const listEl = document.getElementById('linkList');
-    const filteredLinks = links.filter(link => {
-      if (currentFilter === 'all') return true;
-      return link.type === currentFilter;
-    });
-
-    if (filteredLinks.length === 0) {
-      listEl.innerHTML = '<div class="empty-state">保存されているリンクはありません</div>';
-      return;
+    function saveState() {
+      localStorage.setItem('nmd_app_state_v4', JSON.stringify(state));
+      render();
     }
 
-    listEl.innerHTML = filteredLinks.map(link => `
-      <div class="task-item">
-        <div class="task-header">
-          <span class="badge badge-${link.type}">${typeLabels[link.type]}</span>
-          <span style="font-size:0.75rem; color: var(--text-muted);">${link.createdAt}</span>
-          <button class="delete-btn" onclick="deleteLink(${link.id})" title="削除">✕</button>
-        </div>
-        <div class="task-title">${escapeHtml(link.memo)}</div>
-        <div>
-          <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer" class="link-box">
-            🔗 X(ツイッター)で開く
-          </a>
-        </div>
-      </div>
-    `).join('');
-  }
+    function getPeriodRange() {
+      const today = new Date();
+      let start, end;
 
-  function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, match => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[match]));
-  }
+      if (state.periodType === 'monthly') {
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      } else if (state.periodType === 'customRange' && state.startDate && state.endDate) {
+        return { 
+          startText: state.startDate.replace(/-/g, '/'), 
+          endText: state.endDate.replace(/-/g, '/') 
+        };
+      } else {
+        const sDay = Math.min(Math.max(state.startDay || 25, 1), 28);
+        if (today.getDate() >= sDay) {
+          start = new Date(today.getFullYear(), today.getMonth(), sDay);
+          end = new Date(today.getFullYear(), today.getMonth() + 1, sDay - 1);
+        } else {
+          start = new Date(today.getFullYear(), today.getMonth() - 1, sDay);
+          end = new Date(today.getFullYear(), today.getMonth(), sDay - 1);
+        }
+      }
+      return { startText: formatDate(start), endText: formatDate(end) };
+    }
 
-  // 初期読み込み
-  loadBudget();
-  renderTodos();
-  renderLinks();
+    function formatDate(d) {
+      return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+    }
+
+    function render() {
+      // ヘッダー画像
+      const bannerBox = document.getElementById('headerContent');
+      if (bannerBox) {
+        if (state.headerImg) {
+          bannerBox.innerHTML = `<img src="${state.headerImg}" alt="Header" class="header-img">`;
+        } else {
+          bannerBox.innerHTML = `🌸 タップしてイラストURLを設定 🌸`;
+        }
+      }
+
+      // 設定エリアの初期反映（要素が存在するかチェックして代入）
+      if (document.getElementById('periodType')) document.getElementById('periodType').value = state.periodType;
+      if (document.getElementById('startDay')) document.getElementById('startDay').value = state.startDay;
+      if (document.getElementById('startDate')) document.getElementById('startDate').value = state.startDate || '';
+      if (document.getElementById('endDate')) document.getElementById('endDate').value = state.endDate || '';
+      if (document.getElementById('inputTotal')) document.getElementById('inputTotal').value = state.totalBudget;
+      if (document.getElementById('inputBigExpense')) document.getElementById('inputBigExpense').value = state.bigExpense;
+      if (document.getElementById('inputDays')) document.getElementById('inputDays').value = state.settingDays;
+
+      // 表示切替
+      if (document.getElementById('startDayRow')) {
+        document.getElementById('startDayRow').style.display = state.periodType === 'customNext' ? 'flex' : 'none';
+      }
+      if (document.getElementById('customRangeRow')) {
+        document.getElementById('customRangeRow').style.display = state.periodType === 'customRange' ? 'flex' : 'none';
+      }
+
+      // 期間範囲テキストの更新
+      const range = getPeriodRange();
+      const periodRangeEl = document.getElementById('periodRangeText');
+      if (periodRangeEl) {
+        periodRangeEl.innerText = `対象期間: ${range.startText} 〜 ${range.endText}`;
+      }
+
+      if (document.getElementById('remainingDays')) document.getElementById('remainingDays').innerText = state.remainingDays;
+      if (document.getElementById('remainingBudget')) document.getElementById('remainingBudget').innerText = state.remainingBudget.toLocaleString();
+
+      const todayBudget = state.remainingDays > 0 ? Math.floor(state.remainingBudget / state.remainingDays) : 0;
+      if (document.getElementById('todayBudget')) document.getElementById('todayBudget').innerText = todayBudget.toLocaleString();
+      if (document.getElementById('rewardAmount')) document.getElementById('rewardAmount').innerText = state.rewardFrame.toLocaleString();
+
+      // 精算状態の制御
+      if (document.getElementById('settleTriggerBtn') && document.getElementById('settledBadge')) {
+        if (state.isSettledToday) {
+          document.getElementById('settleTriggerBtn').style.display = 'none';
+          document.getElementById('settledBadge').style.display = 'flex';
+          if (document.getElementById('settledTodaySum')) {
+            document.getElementById('settledTodaySum').innerText = state.todaySpentTotal.toLocaleString();
+          }
+        } else {
+          document.getElementById('settleTriggerBtn').style.display = 'block';
+          document.getElementById('settledBadge').style.display = 'none';
+        }
+      }
+
+      // タスク表示
+      const taskListEl = document.getElementById('taskList');
+      if (taskListEl) {
+        taskListEl.innerHTML = '';
+        state.tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.className = `task-item ${task.completed ? 'completed' : ''}`;
+          const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
+          li.innerHTML = `
+            <div>
+              <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+              <span class="task-badge ${badgeClass}">${task.category}</span>
+              <span style="font-size:0.85rem; font-weight:700;">${escapeHtml(task.text)}</span>
+            </div>
+            <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
+          `;
+          taskListEl.appendChild(li);
+        });
+      }
+    }
+
+    function updateSettings() {
+      const oldSettingDays = state.settingDays || 1;
+      const oldRemainingDays = state.remainingDays;
+
+      state.periodType = document.getElementById('periodType').value;
+      state.startDay = Number(document.getElementById('startDay')?.value) || 25;
+      state.startDate = document.getElementById('startDate')?.value || '';
+      state.endDate = document.getElementById('endDate')?.value || '';
+      state.totalBudget = Number(document.getElementById('inputTotal')?.value) || 0;
+      state.bigExpense = Number(document.getElementById('inputBigExpense')?.value) || 0;
+      
+      const newSettingDays = Math.max(1, Number(document.getElementById('inputDays')?.value) || 1);
+
+      // 設定日数変更時の残り日数計算
+      const usedDays = oldSettingDays - oldRemainingDays;
+      state.settingDays = newSettingDays;
+      state.remainingDays = Math.max(0, newSettingDays - usedDays);
+
+      // 残りの生活費を再計算（手元管理費 - 大型出費）
+      state.remainingBudget = state.totalBudget - state.bigExpense - state.todaySpentTotal;
+
+      saveState();
+    }
+
+    // 初回読み込み時に描画
+    document.addEventListener('DOMContentLoaded', () => {
+      render();
+    });
+
+    /* 電卓・精算・タスク用などの共通処理 */
+    function openCalcModal() {
+      calcExpr = '0';
+      updateCalcDisplay();
+      if (document.getElementById('calcTodayTotal')) {
+        document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
+      }
+      document.getElementById('calcModal')?.classList.add('active');
+    }
+
+    function closeCalcModal() { document.getElementById('calcModal')?.classList.remove('active'); }
+
+    function calcInput(val) {
+      if (val === 'C') { calcExpr = '0'; } 
+      else {
+        if (calcExpr === '0' && !isNaN(val)) calcExpr = val;
+        else calcExpr += val;
+      }
+      updateCalcDisplay();
+    }
+
+    function updateCalcDisplay() {
+      if (document.getElementById('calcDisplay')) {
+        document.getElementById('calcDisplay').innerText = calcExpr;
+      }
+    }
+
+    function addExpense() {
+      try {
+        let val = eval(calcExpr.replace(/×/g, '*').replace(/÷/g, '/'));
+        if (isNaN(val) || val < 0) val = 0;
+        val = Math.floor(val);
+
+        if (val > 0) {
+          state.todaySpentTotal += val;
+          state.remainingBudget -= val;
+          calcExpr = '0';
+          updateCalcDisplay();
+          if (document.getElementById('calcTodayTotal')) {
+            document.getElementById('calcTodayTotal').innerText = state.todaySpentTotal.toLocaleString();
+          }
+          saveState();
+        }
+      } catch (e) {
+        alert('計算式が正しくありません');
+      }
+    }
+
+    function confirmDailySettle() {
+      addExpense();
+      if (!state.isSettledToday) {
+        state.isSettledToday = true;
+        state.remainingDays = Math.max(0, state.remainingDays - 1);
+      }
+      closeCalcModal();
+      saveState();
+    }
+
+    function unsettle() {
+      if (confirm('本日の精算を取り消しますか？')) {
+        state.remainingBudget += state.todaySpentTotal;
+        state.todaySpentTotal = 0;
+        state.remainingDays += 1;
+        state.isSettledToday = false;
+        saveState();
+      }
+    }
+
+    function openMonthEndModal() {
+      if (document.getElementById('modalEndRemaining')) {
+        document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
+      }
+      if (document.getElementById('customizeAmount')) {
+        document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
+      }
+      document.getElementById('monthEndModal')?.classList.add('active');
+    }
+
+    function closeMonthEndModal() { document.getElementById('monthEndModal')?.classList.remove('active'); }
+
+    function submitMonthEnd() {
+      const customVal = Number(document.getElementById('customizeAmount')?.value) || 0;
+      state.rewardFrame = customVal;
+      state.remainingDays = state.settingDays;
+      state.remainingBudget = state.totalBudget - state.bigExpense;
+      state.todaySpentTotal = 0;
+      state.isSettledToday = false;
+      closeMonthEndModal();
+      saveState();
+      alert('締め処理が完了しました！');
+    }
+
+    function addTask() {
+      const text = document.getElementById('taskText').value.trim();
+      const category = document.getElementById('taskCategory').value;
+      if (!text) return;
+      state.tasks.push({ id: Date.now(), category, text, completed: false });
+      document.getElementById('taskText').value = '';
+      saveState();
+    }
+
+    function toggleTask(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (task) { task.completed = !task.completed; saveState(); }
+    }
+
+    function deleteTask(id) {
+      state.tasks = state.tasks.filter(t => t.id !== id);
+      saveState();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    }
 </script>
-
 </body>
 </html>
