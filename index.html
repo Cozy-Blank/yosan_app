@@ -59,7 +59,7 @@
       gap: 14px;
     }
 
-    /* 長方形イラスト枠 */
+    /* 長方形イラスト枠（縦幅を従来の約1.3倍に拡大: 4.5/1 -> 3.4/1） */
     .header-banner-wrapper {
       width: 100%;
       margin-bottom: 2px;
@@ -67,7 +67,7 @@
 
     .header-banner {
       width: 100%;
-      aspect-ratio: 4.5 / 1;
+      aspect-ratio: 3.4 / 1;
       background-color: #ffffff;
       border: 2px solid var(--border-color);
       border-radius: 18px;
@@ -127,35 +127,40 @@
       justify-content: space-between;
     }
 
+    /* 本日の使える予算の文字サイズ（少し小さめに調整: 2.2rem -> 1.7rem） */
     .big-number {
-      font-size: 2.2rem;
+      font-size: 1.7rem;
       font-weight: 800;
       color: var(--primary-dark);
     }
 
     .unit {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       margin-left: 2px;
     }
 
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
+    /* 電卓内に移動した目立たない小情報エリア */
+    .sub-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 6px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--border-color);
     }
 
-    .stat-box {
-      background: #fff0f6;
-      border-radius: 14px;
-      padding: 10px;
-      text-align: center;
+    .sub-stat-val {
+      font-weight: 800;
+      color: var(--text-main);
+      margin-left: 2px;
     }
 
     /* メイン電卓入力エリア */
     .calc-area {
-      margin-top: 14px;
+      margin-top: 10px;
       background: #fff0f6;
       border: 1px solid var(--border-color);
       border-radius: 16px;
@@ -200,9 +205,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
-      padding-top: 8px;
-      border-top: 1px dashed var(--border-color);
+      margin-top: 6px;
+      padding-top: 6px;
     }
 
     .btn-settle-blue {
@@ -334,22 +338,14 @@
         <span>本日の使える予算</span>
         <span style="color: var(--primary-dark); font-size: 0.75rem;">自動計算中</span>
       </div>
-      <div id="periodRangeText" style="text-align: center; color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; margin-bottom: 8px;">
+      <div id="periodRangeText" style="text-align: center; color: var(--primary-dark); font-weight: 700; font-size: 0.8rem; margin-bottom: 4px;">
         対象期間: ----/--/-- 〜 ----/--/--
       </div>
-      <div style="text-align: center; margin: 10px 0;">
+      
+      <!-- 本日の使える予算（数字サイズを少し小さく調整） -->
+      <div style="text-align: center; margin: 4px 0 8px 0;">
         <span id="todayBudget" class="big-number">0</span>
         <span class="unit">円</span>
-      </div>
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残り「使う日」</div>
-          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingDays">0</span> 日</div>
-        </div>
-        <div class="stat-box">
-          <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">残りの生活費</div>
-          <div style="font-size: 1.1rem; font-weight: 800; color: var(--text-main);"><span id="remainingBudget">0</span> 円</div>
-        </div>
       </div>
 
       <!-- メイン配置の電卓＆加算エリア -->
@@ -379,6 +375,13 @@
           <button class="calc-btn" onclick="calcInput('0')">0</button>
         </div>
 
+        <!-- 人前でも目立ちにくい「残り使う日」「残りの生活費」（精算ラインの上に移動・小さく表示） -->
+        <div class="sub-stat-row">
+          <div>残り「使う日」: <span id="remainingDays" class="sub-stat-val">0</span> 日</div>
+          <div>残りの生活費: <span id="remainingBudget" class="sub-stat-val">0</span> 円</div>
+        </div>
+
+        <!-- 本日累計＆精算ボタン -->
         <div class="settle-action-row">
           <div style="font-size: 0.85rem; font-weight: 800; color: var(--primary-dark);">
             本日累計: <span id="todaySpentSum">0</span> 円
