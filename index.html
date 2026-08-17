@@ -9,8 +9,8 @@
   <!-- OGP設定（LINE・SNSシェア用） -->
   <meta property="og:title" content="偏愛Tool｜日割りメリハリ">
   <meta property="og:description" content="全体バランスを捨て、一本の「軸」で高く積む。ブーストタイミングを捉えるための仕込み＆日割り予算マネージャー。">
-  <meta property="og:site_name" content="https://i.ibb.co/pjGSsHNm/teiku.png"偏愛Tool">
-  <meta property="og:image" content="">
+  <meta property="og:site_name" content="偏愛Tool">
+  <meta property="og:image" content="https://i.ibb.co/pjGSsHNm/teiku.png">
   <meta property="og:type" content="website">
   
   <!-- Twitter (X) 用カード設定 -->
@@ -58,58 +58,54 @@
       gap: 14px;
     }
 
-    /* 長方形イラスト枠（背景白） */
+    /* 長方形イラスト枠（外枠・背景） */
     .header-banner-wrapper {
       width: 100%;
       margin-bottom: 2px;
     }
 
-    /* 修正後 */
-/* 長方形イラスト枠（外枠・背景） */
-
-/* 長方形イラスト枠（外枠・背景） */
-.header-banner {
-    width: 100%;
-    aspect-ratio: 4.5 / 1;               /* ★縦幅をスリム（補足）にして枠の圧迫感を減らします */
-    background-color: #ffffff;
-    border: 2px solid var(--border-color);
-    border-radius: 18px;
-    box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;                     /* 枠からはみ出ないように固定 */
-    box-sizing: border-box;
-}
-
-/* ヘッダー画像本体 */
-.header-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;                   /* ★contain から cover に変更！枠全体に大きく表示させます */
-    object-position: center;              /* 画像の中心を基準に配置 */
-    pointer-events: none;                /* タップ変更ロック */
-    box-sizing: border-box;
-}
-
-
-    .header-placeholder {
-      color: var(--primary-dark);
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-align: center;
-      padding: 10px;
+    .header-banner {
+      width: 100%;
+      aspect-ratio: 4.5 / 1;
+      background-color: #ffffff;
+      border: 2px solid var(--border-color);
+      border-radius: 18px;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-sizing: border-box;
     }
 
- 
-.card {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  padding: 18px;
-  /* ★影を削除して枠線を少し太く */
-  box-shadow: none;
-  border: 2px solid #f472b6; /* くっきりしたピンクの線（お好みの色に調整可） */
-}
+    .header-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: none;
+      border: 2px solid #f472b6;
+    }
+
+    /* 縦幅半分のコンパクトカード（一番下段用） */
+    .card-compact {
+      background: #faf5ff;
+      border: 2px solid #f3e8ff;
+      border-radius: 14px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     .card-title {
       font-size: 0.85rem;
       font-weight: 700;
@@ -146,29 +142,6 @@
       text-align: center;
     }
 
-    .stat-box .label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-
-    .stat-box .value {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .period-range-box {
-      background: #fff0f6;
-      border-radius: 12px;
-      padding: 8px 12px;
-      text-align: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 10px;
-    }
-
     .btn {
       width: 100%;
       padding: 14px;
@@ -182,65 +155,8 @@
 
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--primary); color: white; }
-    .btn-accent { background: #10b981; color: white; }
-    .btn-secondary { background: #f1f5f9; color: #475569; }
 
-    .settled-badge {
-      background: #fce7f3;
-      color: var(--primary-dark);
-      padding: 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-align: center;
-      margin-top: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .unsettle-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      text-decoration: underline;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 8px;
-    }
-
-    .input-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .input-row label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .input-row input, .input-row select {
-      width: 140px;
-      padding: 8px 10px;
-      border: 1px solid var(--border-color);
-      background: #fff0f6;
-      border-radius: 10px;
-      text-align: right;
-      font-size: 0.85rem;
-      font-weight: 800;
-      outline: none;
-      color: var(--text-main);
-    }
-
-    /* タスクメモ */
+    /* タスクメモ・買い物リスト */
     .task-input-container {
       display: flex;
       gap: 6px;
@@ -249,7 +165,7 @@
 
     .task-input-container input {
       flex: 1;
-      padding: 10px;
+      padding: 8px 10px;
       border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 0.85rem;
@@ -258,16 +174,17 @@
     }
 
     .task-input-container select {
-      padding: 8px;
+      padding: 6px 8px;
       border: 1px solid var(--border-color);
       border-radius: 10px;
       font-size: 0.8rem;
       background: white;
       font-weight: 700;
+      color: var(--text-main);
     }
 
     .btn-small {
-      padding: 10px 14px;
+      padding: 8px 12px;
       border-radius: 10px;
       font-size: 0.85rem;
       font-weight: 800;
@@ -288,14 +205,22 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
+      padding: 8px 10px;
       background: #fff0f6;
       border-radius: 10px;
+      font-size: 0.85rem;
     }
 
-    .task-item.completed {
+    .task-item.completed span {
       opacity: 0.4;
       text-decoration: line-through;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
     }
 
     .task-badge {
@@ -303,11 +228,11 @@
       padding: 2px 6px;
       border-radius: 6px;
       font-weight: 800;
-      margin-right: 6px;
+      white-space: nowrap;
     }
 
-    .badge-outing { background: #dbeafe; color: #1e40af; }
-    .badge-payment { background: #fef3c7; color: #92400e; }
+    .badge-buy { background: #d1fae5; color: #065f46; }
+    .badge-todo { background: #fef3c7; color: #92400e; }
 
     /* 電卓風モーダル */
     .modal-overlay {
@@ -369,20 +294,11 @@
     .calc-btn.op { background: #fce7f3; color: var(--primary-dark); }
     .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
     .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
-
-    .badge-frame {
-      background: #f3e8ff;
-      color: #6b21a8;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
   </style>
 </head>
 <body>
 
- <div class="app-container">
+  <div class="app-container">
     <!-- ヘッダーイラスト -->
     <div class="header-banner-wrapper">
       <div class="header-banner">
@@ -390,7 +306,7 @@
       </div>
     </div>
 
-    <!-- 1. 本日の使える予算カード（復活！） -->
+    <!-- 1. 本日の使える予算カード -->
     <div class="card">
       <div class="card-title">
         <span>本日の使える予算 (買い物1回分)</span>
@@ -422,13 +338,18 @@
       </div>
     </div>
 
-    <!-- 2. 今期の偏愛・ご褒美枠カード（復活！） -->
-    <div class="card" style="background: #faf5ff; border-color: #f3e8ff;">
-      <div class="card-title" style="color: #7e22ce;">今期の偏愛・ご褒美枠 (ブースト用)</div>
-      <div style="text-align: center; margin: 5px 0;">
-        <span id="rewardAmount" class="big-number" style="color: #7e22ce;">0</span>
-        <span class="unit" style="color: #7e22ce;">円</span>
+    <!-- 2. 買い物予定・ToDoリストカード（予算カードの直下に配置） -->
+    <div class="card">
+      <div class="card-title">🛒 買い物予定・ToDoリスト</div>
+      <div class="task-input-container">
+        <select id="taskCategory">
+          <option value="買い物">🛒 買い物</option>
+          <option value="ToDo">📝 ToDo</option>
+        </select>
+        <input type="text" id="taskText" placeholder="買いたいもの・やること...">
+        <button class="btn-small" onclick="addTask()">追加</button>
       </div>
+      <ul class="task-list" id="taskList"></ul>
     </div>
 
     <!-- 3. 期間・予算の設定カード -->
@@ -476,15 +397,59 @@
         <input type="number" id="inputDays" oninput="updateSettings()" style="padding: 6px; border-radius: 8px; border: 1px solid #ccc; text-align: right; width: 120px;">
       </div>
     </div>
-</div>
-  
+
+    <!-- 4. 来月のご偏愛ブーストにまわす（一番下段に移動＆サイズ半分に変更） -->
+    <div class="card-compact">
+      <div style="font-size: 0.8rem; font-weight: 700; color: #7e22ce;">来月のご偏愛ブーストにまわす</div>
+      <div>
+        <span id="rewardAmount" style="font-size: 1.2rem; font-weight: 800; color: #7e22ce;">0</span>
+        <span style="font-size: 0.85rem; font-weight: 700; color: #7e22ce; margin-left: 2px;">円</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 電卓モーダル -->
+  <div id="calcModal" class="modal-overlay">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-size: 0.9rem; font-weight: 700;">本日利用分を入力</span>
+        <button onclick="closeCalcModal()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer;">✕</button>
+      </div>
+      <div id="calcDisplay" class="calc-display">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn clear" onclick="calcInput('C')">C</button>
+        <button class="calc-btn op" onclick="calcInput('/')">÷</button>
+        <button class="calc-btn op" onclick="calcInput('*')">×</button>
+        <button class="calc-btn op" onclick="calcInput('-')">-</button>
+        
+        <button class="calc-btn" onclick="calcInput('7')">7</button>
+        <button class="calc-btn" onclick="calcInput('8')">8</button>
+        <button class="calc-btn" onclick="calcInput('9')">9</button>
+        <button class="calc-btn op" onclick="calcInput('+')">+</button>
+        
+        <button class="calc-btn" onclick="calcInput('4')">4</button>
+        <button class="calc-btn" onclick="calcInput('5')">5</button>
+        <button class="calc-btn" onclick="calcInput('6')">6</button>
+        <button class="calc-btn add" onclick="addExpense()">加算</button>
+        
+        <button class="calc-btn" onclick="calcInput('1')">1</button>
+        <button class="calc-btn" onclick="calcInput('2')">2</button>
+        <button class="calc-btn" onclick="calcInput('3')">3</button>
+        <button class="calc-btn" onclick="calcInput('0')">0</button>
+      </div>
+      <div style="margin-top: 10px; text-align: right; font-size: 0.85rem; font-weight: 700;">
+        本日累計: <span id="calcTodayTotal">0</span> 円
+      </div>
+      <button class="btn btn-primary" style="margin-top: 12px;" onclick="confirmDailySettle()">精算を確定する</button>
+    </div>
+  </div>
 
   <script>
     const DEFAULT_HEADER = 'https://i.ibb.co/pjGSsHNm/teiku.png';
 
     let state = JSON.parse(localStorage.getItem('nmd_app_state_v4') || 'null') || {
       headerImg: DEFAULT_HEADER,
-      periodType: 'monthly', // 'monthly' | 'customNext' | 'customRange'
+      periodType: 'monthly',
       startDay: 25,
       startDate: '',
       endDate: '',
@@ -536,17 +501,7 @@
     }
 
     function render() {
-      // ヘッダー画像
-      const bannerBox = document.getElementById('headerContent');
-      if (bannerBox) {
-        if (state.headerImg) {
-          bannerBox.innerHTML = `<img src="${state.headerImg}" alt="Header" class="header-img">`;
-        } else {
-          bannerBox.innerHTML = `🌸 タップしてイラストURLを設定 🌸`;
-        }
-      }
-
-      // 設定エリアの初期反映（要素が存在するかチェックして代入）
+      // 設定エリアの初期反映
       if (document.getElementById('periodType')) document.getElementById('periodType').value = state.periodType;
       if (document.getElementById('startDay')) document.getElementById('startDay').value = state.startDay;
       if (document.getElementById('startDate')) document.getElementById('startDate').value = state.startDate || '';
@@ -591,24 +546,28 @@
         }
       }
 
-      // タスク表示
+      // タスク・買い物リスト表示
       const taskListEl = document.getElementById('taskList');
       if (taskListEl) {
         taskListEl.innerHTML = '';
-        state.tasks.forEach(task => {
-          const li = document.createElement('li');
-          li.className = `task-item ${task.completed ? 'completed' : ''}`;
-          const badgeClass = task.category === 'お出かけ' ? 'badge-outing' : 'badge-payment';
-          li.innerHTML = `
-            <div>
-              <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
-              <span class="task-badge ${badgeClass}">${task.category}</span>
-              <span style="font-size:0.85rem; font-weight:700;">${escapeHtml(task.text)}</span>
-            </div>
-            <button style="color:#ef4444; border:none; background:none; cursor:pointer;" onclick="deleteTask(${task.id})">削除</button>
-          `;
-          taskListEl.appendChild(li);
-        });
+        if (state.tasks.length === 0) {
+          taskListEl.innerHTML = '<li style="text-align:center; color: var(--text-muted); font-size:0.8rem; padding: 6px 0;">リストは空です</li>';
+        } else {
+          state.tasks.forEach(task => {
+            const li = document.createElement('li');
+            li.className = `task-item ${task.completed ? 'completed' : ''}`;
+            const badgeClass = task.category === '買い物' ? 'badge-buy' : 'badge-todo';
+            li.innerHTML = `
+              <div class="task-left">
+                <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                <span class="task-badge ${badgeClass}">${task.category}</span>
+                <span style="font-weight:700;">${escapeHtml(task.text)}</span>
+              </div>
+              <button style="color:#ef4444; border:none; background:none; cursor:pointer; font-weight:700; font-size:0.8rem;" onclick="deleteTask(${task.id})">削除</button>
+            `;
+            taskListEl.appendChild(li);
+          });
+        }
       }
     }
 
@@ -625,23 +584,20 @@
       
       const newSettingDays = Math.max(1, Number(document.getElementById('inputDays')?.value) || 1);
 
-      // 設定日数変更時の残り日数計算
       const usedDays = oldSettingDays - oldRemainingDays;
       state.settingDays = newSettingDays;
       state.remainingDays = Math.max(0, newSettingDays - usedDays);
 
-      // 残りの生活費を再計算（手元管理費 - 大型出費）
       state.remainingBudget = state.totalBudget - state.bigExpense - state.todaySpentTotal;
 
       saveState();
     }
 
-    // 初回読み込み時に描画
     document.addEventListener('DOMContentLoaded', () => {
       render();
     });
 
-    /* 電卓・精算・タスク用などの共通処理 */
+    /* 電卓・精算・タスク用処理 */
     function openCalcModal() {
       calcExpr = '0';
       updateCalcDisplay();
@@ -709,36 +665,13 @@
       }
     }
 
-    function openMonthEndModal() {
-      if (document.getElementById('modalEndRemaining')) {
-        document.getElementById('modalEndRemaining').innerText = state.remainingBudget.toLocaleString();
-      }
-      if (document.getElementById('customizeAmount')) {
-        document.getElementById('customizeAmount').value = Math.floor(state.remainingBudget / 3);
-      }
-      document.getElementById('monthEndModal')?.classList.add('active');
-    }
-
-    function closeMonthEndModal() { document.getElementById('monthEndModal')?.classList.remove('active'); }
-
-    function submitMonthEnd() {
-      const customVal = Number(document.getElementById('customizeAmount')?.value) || 0;
-      state.rewardFrame = customVal;
-      state.remainingDays = state.settingDays;
-      state.remainingBudget = state.totalBudget - state.bigExpense;
-      state.todaySpentTotal = 0;
-      state.isSettledToday = false;
-      closeMonthEndModal();
-      saveState();
-      alert('締め処理が完了しました！');
-    }
-
     function addTask() {
-      const text = document.getElementById('taskText').value.trim();
+      const textEl = document.getElementById('taskText');
+      const text = textEl.value.trim();
       const category = document.getElementById('taskCategory').value;
       if (!text) return;
       state.tasks.push({ id: Date.now(), category, text, completed: false });
-      document.getElementById('taskText').value = '';
+      textEl.value = '';
       saveState();
     }
 
@@ -755,6 +688,6 @@
     function escapeHtml(str) {
       return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     }
-</script>
+  </script>
 </body>
 </html>
