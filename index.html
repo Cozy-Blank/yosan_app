@@ -24,11 +24,16 @@
       /* ★ここで色を変更すると全体に一括反映されます★ */
       --bg-color: #f3f0f7;            /* ライトパープルグレー */
       --card-bg: #ffffff;             /* カード背景 */
-      --primary: #522b80;             /* メインカラー */
+      --primary: #522b80;             /* メインカラー（ディープパープル） */
       --primary-dark: #351759;        /* 濃い紫（強調テキストなど） */
       --accent-blue: #00875a;         /* 精算ボタン（緑系） */
       --accent-blue-dark: #005c3d;
-      --accent-purple: #e06d20;       /* ブーストボタン・アクセント（オレンジ系） */
+      
+      /* ★ブースト用ピンク系カラー（調和する大人ピンク）★ */
+      --accent-pink: #d81b60;         /* メインピンク（ベリーピンク） */
+      --accent-pink-bg: #fff0f5;      /* 薄いピンク背景（ラベンダーブラッシュ） */
+      --accent-pink-border: #f8bbd0;  /* 枠線用ライトピンク */
+
       --text-main: #271a38;           /* メイン文字色 */
       --text-muted: #7b6d8c;          /* 補足文字色 */
       --border-color: #d5c3e5;        /* 枠線カラー */
@@ -99,7 +104,7 @@
       border: 2px solid var(--border-color);
     }
 
-    /* 下部仕分けエリア（統一された落ち着いたデザイン） */
+    /* 下部仕分けエリア */
     .card-compact {
       background: #faf7fc;
       border: 2px solid var(--border-color);
@@ -110,9 +115,10 @@
       justify-content: space-between;
     }
 
+    /* ブースト専用カード（ほんのり甘い華やかピンク） */
     .card-boost-frame {
-      background: #fff8f3;
-      border: 2px solid #fcd2b2;
+      background: var(--accent-pink-bg);
+      border: 2px solid var(--accent-pink-border);
       border-radius: 14px;
       padding: 12px 16px;
       display: flex;
@@ -212,9 +218,9 @@
     .calc-btn.add { background: var(--primary); color: white; border: none; grid-column: span 2; }
     .calc-btn.clear { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
     
-    /* ブーストボタン */
+    /* ブーストボタン（ピンク系へ変更） */
     .calc-btn.boost {
-      background: var(--accent-purple);
+      background: var(--accent-pink);
       color: white;
       border: none;
       font-size: 0.8rem;
@@ -338,7 +344,7 @@
     }
 
     .badge-buy { background: #f0eaf7; color: var(--primary); }
-    .badge-todo { background: #ffedd5; color: #c2410c; }
+    .badge-todo { background: #fce4ec; color: var(--accent-pink); }
 
     /* ポップアップ（モーダル）スタイル */
     .modal-overlay {
@@ -359,7 +365,7 @@
       width: 100%;
       max-width: 340px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      border: 2px solid var(--accent-purple);
+      border: 2px solid var(--accent-pink-border);
       text-align: center;
     }
   </style>
@@ -415,8 +421,8 @@
           <button class="calc-btn" onclick="calcInput('3')">3</button>
           <button class="calc-btn" onclick="calcInput('0')">0</button>
 
-          <!-- ブーストボタン -->
-          <button class="calc-btn boost" onclick="openBoostModal()" style="grid-column: span 2;">🚀 ブースト</button>
+          <!-- ブーストボタン（ピンク） -->
+          <button class="calc-btn boost" onclick="openBoostModal()" style="grid-column: span 2;">💖 ブースト</button>
         </div>
 
         <!-- 「残り使う日」「残りの生活費」 -->
@@ -514,7 +520,7 @@
       </div>
     </div>
 
-    <!-- 4. 期間終了後の余剰金仕分けエリア（洗練されたトーンに統一） -->
+    <!-- 4. 期間終了後の余剰金仕分けエリア -->
     
     <!-- (1) 全体精算後の残り -->
     <div class="card-compact">
@@ -525,12 +531,12 @@
       </div>
     </div>
 
-    <!-- (2) 来月のご偏愛ブーストにまわす（アクセントカラーのオレンジ系と調和） -->
+    <!-- (2) 来月のご偏愛ブーストにまわす（ベリーピンクカラー） -->
     <div class="card-boost-frame">
-      <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple);">🚀 来月のご偏愛ブーストにまわす</div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent-pink);">💖 来月のご偏愛ブーストにまわす</div>
       <div style="display: flex; align-items: center; gap: 4px;">
-        <input type="number" id="inputRewardFrame" class="form-input form-input-number" oninput="updateRewardAndPiggy()" style="width: 90px; color: var(--accent-purple); font-weight: 800; border-color: #fcd2b2; background: #ffffff;">
-        <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-purple);">円</span>
+        <input type="number" id="inputRewardFrame" class="form-input form-input-number" oninput="updateRewardAndPiggy()" style="width: 90px; color: var(--accent-pink); font-weight: 800; border-color: var(--accent-pink-border); background: #ffffff;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-pink);">円</span>
       </div>
     </div>
 
@@ -548,12 +554,12 @@
   <!-- ブースト用ポップアップモーダル -->
   <div id="boostModal" class="modal-overlay">
     <div class="modal-content">
-      <h3 style="font-size: 1.05rem; color: var(--accent-purple); margin-bottom: 8px;">🚀 ご偏愛ブースト発動</h3>
+      <h3 style="font-size: 1.05rem; color: var(--accent-pink); margin-bottom: 8px;">💖 ご偏愛ブースト発動</h3>
       <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">先月から繰り越されたブースト枠から本日の予算へチャージします。</div>
       
       <div style="background: var(--calc-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; margin-bottom: 12px;">
         <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">現在のブースト残高</div>
-        <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-purple);"><span id="modalBoostBalance">0</span> 円</div>
+        <div style="font-size: 1.4rem; font-weight: 800; color: var(--accent-pink);"><span id="modalBoostBalance">0</span> 円</div>
       </div>
 
       <div style="margin-bottom: 16px;">
@@ -563,7 +569,7 @@
 
       <div style="display: flex; gap: 8px;">
         <button onclick="closeBoostModal()" style="flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: white; font-weight: 700; font-size: 0.85rem; cursor: pointer;">キャンセル</button>
-        <button onclick="applyBoost()" style="flex: 1.5; padding: 10px; border-radius: 10px; border: none; background: var(--accent-purple); color: white; font-weight: 800; font-size: 0.85rem; cursor: pointer;">本日の予算に追加</button>
+        <button onclick="applyBoost()" style="flex: 1.5; padding: 10px; border-radius: 10px; border: none; background: var(--accent-pink); color: white; font-weight: 800; font-size: 0.85rem; cursor: pointer;">本日の予算に追加</button>
       </div>
     </div>
   </div>
@@ -664,7 +670,6 @@
         periodRangeEl.innerText = `対象期間: ${range.startText} 〜 ${range.endText}`;
       }
 
-      // ★マイナス表記なし（0未満になっても0で固定）★
       const displayRemainingBudget = Math.max(0, state.remainingBudget);
 
       if (document.getElementById('remainingDays')) document.getElementById('remainingDays').innerText = state.remainingDays;
@@ -832,7 +837,6 @@
       }
     }
 
-    /* オールリセット（全データ初期化） */
     function allReset() {
       if (confirm('【注意】これまでのすべての計算記録・買い物リストがリセットされます。\n本当に初期化しますか？')) {
         state = { ...defaultState };
