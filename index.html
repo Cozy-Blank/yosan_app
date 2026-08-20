@@ -99,22 +99,32 @@
       border: 2px solid var(--border-color);
     }
 
-    /* コンパクトカード（仕分けセクション） */
+    /* 下部仕分けエリア（統一された落ち着いたデザイン） */
     .card-compact {
-      background: #eff6ff;
-      border: 2px solid #bfdbfe;
+      background: #faf7fc;
+      border: 2px solid var(--border-color);
       border-radius: 14px;
-      padding: 10px 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-boost-frame {
+      background: #fff8f3;
+      border: 2px solid #fcd2b2;
+      border-radius: 14px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
     .card-piggy {
-      background: #fefce8;
-      border: 2px solid #fef08a;
+      background: #ffffff;
+      border: 2px solid var(--border-color);
       border-radius: 14px;
-      padding: 10px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -327,7 +337,7 @@
       white-space: nowrap;
     }
 
-    .badge-buy { background: #e0f2fe; color: #0369a1; }
+    .badge-buy { background: #f0eaf7; color: var(--primary); }
     .badge-todo { background: #ffedd5; color: #c2410c; }
 
     /* ポップアップ（モーダル）スタイル */
@@ -504,32 +514,32 @@
       </div>
     </div>
 
-    <!-- 4. 期間終了後の余剰金仕分けエリア -->
+    <!-- 4. 期間終了後の余剰金仕分けエリア（洗練されたトーンに統一） -->
     
     <!-- (1) 全体精算後の残り -->
     <div class="card-compact">
-      <div style="font-size: 0.8rem; font-weight: 700; color: #1e40af;">全体精算後の残り (余剰金)</div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary-dark);">全体精算後の残り (余剰金)</div>
       <div>
-        <span id="finalSurplus" style="font-size: 1.2rem; font-weight: 800; color: #1e40af;">0</span>
-        <span style="font-size: 0.85rem; font-weight: 700; color: #1e40af; margin-left: 2px;">円</span>
+        <span id="finalSurplus" style="font-size: 1.25rem; font-weight: 800; color: var(--primary-dark);">0</span>
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); margin-left: 2px;">円</span>
       </div>
     </div>
 
-    <!-- (2) 来月のご偏愛ブーストにまわす（入力可能） -->
-    <div class="card-compact" style="background: #f0fdfa; border-color: #ccfbf1;">
-      <div style="font-size: 0.8rem; font-weight: 700; color: #0f766e;">来月のご偏愛ブーストにまわす</div>
+    <!-- (2) 来月のご偏愛ブーストにまわす（アクセントカラーのオレンジ系と調和） -->
+    <div class="card-boost-frame">
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple);">🚀 来月のご偏愛ブーストにまわす</div>
       <div style="display: flex; align-items: center; gap: 4px;">
-        <input type="number" id="inputRewardFrame" class="form-input form-input-number" oninput="updateRewardAndPiggy()" style="width: 90px; color: #0f766e; font-weight: 800; border-color: #5eead4;">
-        <span style="font-size: 0.85rem; font-weight: 700; color: #0f766e;">円</span>
+        <input type="number" id="inputRewardFrame" class="form-input form-input-number" oninput="updateRewardAndPiggy()" style="width: 90px; color: var(--accent-purple); font-weight: 800; border-color: #fcd2b2; background: #ffffff;">
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--accent-purple);">円</span>
       </div>
     </div>
 
     <!-- (3) 残りは貯金箱へ -->
     <div class="card-piggy">
-      <div style="font-size: 0.8rem; font-weight: 700; color: #854d0e;">🐷 残りは貯金箱へ</div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);">🐷 残りは貯金箱へ</div>
       <div>
-        <span id="piggyBankAmount" style="font-size: 1.2rem; font-weight: 800; color: #854d0e;">0</span>
-        <span style="font-size: 0.85rem; font-weight: 700; color: #854d0e; margin-left: 2px;">円</span>
+        <span id="piggyBankAmount" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">0</span>
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary); margin-left: 2px;">円</span>
       </div>
     </div>
 
